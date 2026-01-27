@@ -20,7 +20,7 @@ Projeyi yerel ortamınızda kurmak ve çalıştırmak için aşağıdaki adımla
 1.  **Depoyu Klonlayın:**
 
     ```bash
-    git clone https://github.com/your-repo/islamic-chatbot.git
+    git clone https://github.com/caymazyusuf72/islamic-chatbot.git
     cd islamic-chatbot
     ```
 

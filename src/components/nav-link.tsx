@@ -15,10 +15,8 @@ export function NavLink({ href, children }: NavLinkProps) {
   const isActive = pathname === href;
 
   return (
-    <Link href={href} passHref legacyBehavior>
-      <SidebarMenuButton asChild isActive={isActive}>
-        <a>{children}</a>
-      </SidebarMenuButton>
-    </Link>
+    <SidebarMenuButton asChild isActive={isActive}>
+      <Link href={href}>{children}</Link>
+    </SidebarMenuButton>
   );
 }
