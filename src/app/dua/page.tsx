@@ -6,8 +6,9 @@ import { duaAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LoaderCircle, BookHeart, Send, Sparkles } from 'lucide-react';
+import { LoaderCircle, BookHeart, Send, Sparkles, Copy, Volume2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
 
 const initialState = {
   recommendations: null,
@@ -18,6 +19,7 @@ export default function DuaPage() {
   const [state, formAction] = useFormState(duaAction, initialState);
   const [pending, setPending] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const { toast } = useToast();
   
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,6 +27,22 @@ export default function DuaPage() {
     formAction(new FormData(event.currentTarget));
   };
   
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: 'Copied',
+        description: 'Dua copied to clipboard.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to copy dua.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   useEffect(() => {
     if (state.recommendations || state.error) {
       setPending(false);
@@ -64,19 +82,32 @@ export default function DuaPage() {
         <ScrollArea className="flex-1">
           <div className="max-w-4xl mx-auto">
             {pending && (
-              <div className="flex items-center justify-center p-8 text-muted-foreground gap-2">
+              <div className="flex items-center justify-center p-8 text-muted-foreground gap-2 animate-fade-in">
                 <LoaderCircle className="animate-spin w-5 h-5" />
                 <span>Finding the best duas for you...</span>
               </div>
             )}
             {state.error && <p className="text-destructive text-center">{state.error}</p>}
             {state.recommendations && (
-              <div className="space-y-4">
+              <div className="space-y-4 animate-slide-in">
                 <h2 className="flex items-center gap-2 font-headline text-2xl text-primary"><Sparkles className="w-5 h-5" /> Here are some recommendations:</h2>
                 {state.recommendations.map((dua, index) => (
-                  <Card key={index} className="bg-card/60 backdrop-blur-md border">
+                  <Card key={index} className="bg-card/60 backdrop-blur-md border transition-smooth hover:shadow-lg">
                     <CardContent className="p-4">
-                      <p className="text-lg">{dua}</p>
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-lg flex-1">{dua}</p>
+                        <div className="flex gap-1 flex-shrink-0">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                            onClick={() => handleCopy(dua)}
+                            title="Copy dua"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}

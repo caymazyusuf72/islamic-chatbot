@@ -5,16 +5,21 @@ import { answerAction } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle } from 'lucide-react';
+import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
+import { useToast } from '@/hooks/use-toast';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
   references?: string[];
+  id: string;
+  timestamp: number;
 };
+
+const STORAGE_KEY = 'nurai-chat-history';
 
 function TTSButton({ text }: { text: string }) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -77,9 +82,32 @@ function TTSButton({ text }: { text: string }) {
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  // Load chat history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to load chat history:', e);
+      }
+    }
+  }, []);
+
+  // Save chat history to localStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [messages]);
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -88,22 +116,119 @@ export default function Home() {
 
     if (!question.trim()) return;
     
-    const newMessages: Message[] = [...messages, { role: 'user', content: question }];
-    setMessages(newMessages);
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: question,
+      timestamp: Date.now(),
+    };
+    
+    setMessages(prev => [...prev, newMessage]);
     setPending(true);
     setError(null);
     formRef.current?.reset();
 
-    const result = await answerAction(newMessages);
+    const result = await answerAction([...messages, newMessage]);
 
     if (result.response) {
-      setMessages(prev => [...prev, result.response as Message]);
+      const responseMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: result.response.content,
+        references: result.response.references,
+        timestamp: Date.now(),
+      };
+      setMessages(prev => [...prev, responseMessage]);
     } else if (result.error) {
       setError(result.error);
-      // Optionally remove the user's message if the API call fails
-      // setMessages(prev => prev.slice(0, -1));
     }
     setPending(false);
+  };
+
+  const handleRetry = async (messageIndex: number) => {
+    setRetrying(true);
+    const messagesToRetry = messages.slice(0, messageIndex);
+    
+    const result = await answerAction(messagesToRetry);
+    
+    if (result.response) {
+      const responseMessage: Message = {
+        id: (Date.now()).toString(),
+        role: 'assistant',
+        content: result.response.content,
+        references: result.response.references,
+        timestamp: Date.now(),
+      };
+      
+      setMessages(prev => [
+        ...prev.slice(0, messageIndex),
+        responseMessage,
+      ]);
+      toast({
+        title: 'Success',
+        description: 'Response regenerated successfully.',
+      });
+    } else if (result.error) {
+      toast({
+        title: 'Error',
+        description: result.error,
+        variant: 'destructive',
+      });
+    }
+    setRetrying(false);
+  };
+
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: 'Copied',
+        description: 'Text copied to clipboard.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to copy text.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteMessage = (id: string) => {
+    setMessages(prev => prev.filter(msg => msg.id !== id));
+    toast({
+      title: 'Deleted',
+      description: 'Message deleted.',
+    });
+  };
+
+  const handleClearChat = () => {
+    setMessages([]);
+    toast({
+      title: 'Cleared',
+      description: 'Chat history cleared.',
+    });
+  };
+
+  const handleExportChat = () => {
+    const chatText = messages.map(msg =>
+      `[${new Date(msg.timestamp).toLocaleString()}] ${msg.role.toUpperCase()}:\n${msg.content}\n${msg.references ? 'References: ' + msg.references.join(', ') : ''}\n\n`
+    ).join('');
+    
+    const blob = new Blob([chatText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nurai-chat-export-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: 'Exported',
+      description: 'Chat exported successfully.',
+    });
   };
   
   useEffect(() => {
@@ -117,9 +242,19 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
-      <header className="p-4 border-b flex items-center gap-2">
-        <Sparkles className="text-primary" />
-        <h1 className="text-xl font-headline font-bold tracking-wider">AI-Powered Answers</h1>
+      <header className="p-4 border-b flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles className="text-primary" />
+          <h1 className="text-xl font-headline font-bold tracking-wider">AI-Powered Answers</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleExportChat} title="Export chat">
+            <Download className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleClearChat} title="Clear chat" disabled={messages.length === 0}>
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
       </header>
 
       <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
@@ -133,16 +268,50 @@ export default function Home() {
           )}
 
           {messages.map((msg, index) => (
-            <div key={index} className={`flex items-start gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+            <div key={msg.id} className={`flex items-start gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
               {msg.role === 'assistant' && (
                 <Avatar className="w-8 h-8 border-2 border-primary">
                   <AvatarFallback><Bot className="w-5 h-5" /></AvatarFallback>
                 </Avatar>
               )}
               <div className={`flex flex-col gap-2 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`rounded-lg p-4 flex items-end gap-2 ${msg.role === 'user' ? 'bg-primary/20' : 'bg-card/80 backdrop-blur-md border'}`}>
-                  <p className="whitespace-pre-wrap">{msg.content}</p>
-                   {msg.role === 'assistant' && <TTSButton text={msg.content} />}
+                <div className={`rounded-lg p-4 flex items-start gap-2 ${msg.role === 'user' ? 'bg-primary/20' : 'bg-card/80 backdrop-blur-md border'}`}>
+                  <div className="flex-1">
+                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                  <div className="flex flex-col gap-1 flex-shrink-0">
+                    {msg.role === 'assistant' && <TTSButton text={msg.content} />}
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                      onClick={() => handleCopy(msg.content)}
+                      title="Copy"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                    {error && msg.role === 'assistant' && index === messages.length - 1 && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                        onClick={() => handleRetry(index)}
+                        title="Retry"
+                        disabled={retrying}
+                      >
+                        <RotateCw className={`w-3 h-3 ${retrying ? 'animate-spin' : ''}`} />
+                      </Button>
+                    )}
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                      onClick={() => handleDeleteMessage(msg.id)}
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
                 </div>
                 {msg.references && msg.references.length > 0 && (
                   <Card className="max-w-full w-fit bg-card/60 border-dashed">
@@ -150,8 +319,17 @@ export default function Home() {
                       <CardTitle className="text-xs font-medium">References</CardTitle>
                     </CardHeader>
                     <CardContent className="p-2">
-                      <ul className="text-xs text-muted-foreground list-disc list-inside">
-                        {msg.references.map((ref, i) => <li key={i}>{ref}</li>)}
+                      <ul className="text-xs text-muted-foreground list-disc list-inside space-y-1">
+                        {msg.references.map((ref, i) => (
+                          <li
+                            key={i}
+                            className="cursor-pointer hover:text-primary hover:underline"
+                            onClick={() => handleCopy(ref)}
+                            title="Click to copy"
+                          >
+                            {ref}
+                          </li>
+                        ))}
                       </ul>
                     </CardContent>
                   </Card>
