@@ -17,7 +17,16 @@ export default function PrayerTimesPage() {
       setLoading(true);
       setError(null);
       
-      const coords = lat && lon ? { latitude: lat, longitude: lon } : await getUserLocation();
+      let coords: { latitude: number; longitude: number };
+      if (lat && lon) {
+        coords = { latitude: lat, longitude: lon };
+      } else {
+        const position = await getUserLocation();
+        coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+      }
       setLocation(coords);
       
       const data = await getPrayerTimes(coords.latitude, coords.longitude);
