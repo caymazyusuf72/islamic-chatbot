@@ -60,6 +60,11 @@ export const translations: Translations = {
     'dua.getCopied': 'Dua copied to clipboard.',
     'dua.failedToCopy': 'Failed to copy dua.',
     'dua.getRecommendations': 'Get Recommendations',
+    'dua.transliteration': 'Transliteration',
+    'dua.meaning': 'Meaning',
+    'dua.source': 'Source',
+    'dua.whenToRecite': 'When to Recite',
+    'dua.copyDua': 'Copy Dua',
     
     // Prayer Times
     'prayer.title': 'Prayer Times',
@@ -186,6 +191,11 @@ export const translations: Translations = {
     'dua.getCopied': 'Dua panoya kopyalandı.',
     'dua.failedToCopy': 'Dua kopyalanamadı.',
     'dua.getRecommendations': 'Tavsiyeleri Al',
+    'dua.transliteration': 'Okunuş',
+    'dua.meaning': 'Anlam',
+    'dua.source': 'Kaynak',
+    'dua.whenToRecite': 'Ne Zaman Okunur',
+    'dua.copyDua': 'Duayı Kopyala',
     
     // Prayer Times
     'prayer.title': 'Namaz Vakitleri',
@@ -312,6 +322,11 @@ export const translations: Translations = {
     'dua.getCopied': 'تم نسخ الدعاء إلى الحافظة.',
     'dua.failedToCopy': 'فشل نسخ الدعاء.',
     'dua.getRecommendations': 'احصل على التوصيات',
+    'dua.transliteration': 'النطق',
+    'dua.meaning': 'المعنى',
+    'dua.source': 'المصدر',
+    'dua.whenToRecite': 'متى يُقرأ',
+    'dua.copyDua': 'نسخ الدعاء',
     
     // Prayer Times
     'prayer.title': 'أوقات الصلاة',

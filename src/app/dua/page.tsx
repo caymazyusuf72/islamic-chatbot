@@ -6,13 +6,25 @@ import { duaAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { LoaderCircle, BookHeart, Send, Sparkles, Copy, Volume2 } from 'lucide-react';
+import { LoaderCircle, BookHeart, Send, Sparkles, Copy, BookOpen } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
 
-const initialState = {
+type Dua = {
+  title: string;
+  arabicText: string;
+  transliteration: string;
+  meaning: string;
+  source: string;
+  whenToRecite: string;
+};
+
+const initialState: {
+  recommendations: Dua[] | null;
+  error: string | null;
+} = {
   recommendations: null,
   error: null,
 };
@@ -28,7 +40,9 @@ export default function DuaPage() {
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPending(true);
-    formAction(new FormData(event.currentTarget));
+    const formData = new FormData(event.currentTarget);
+    formData.append('language', language);
+    formAction(formData);
   };
   
   const handleCopy = async (text: string) => {
@@ -93,24 +107,84 @@ export default function DuaPage() {
             )}
             {state.error && <p className="text-destructive text-center">{state.error}</p>}
             {state.recommendations && (
-              <div className="space-y-4 animate-slide-in">
-                <h2 className="flex items-center gap-2 font-headline text-2xl text-primary"><Sparkles className="w-5 h-5" /> {t('dua.hereAreRecommendations')}</h2>
+              <div className="space-y-6 animate-slide-in">
+                <h2 className="flex items-center gap-2 font-headline text-2xl text-primary">
+                  <Sparkles className="w-5 h-5" /> {t('dua.hereAreRecommendations')}
+                </h2>
                 {state.recommendations.map((dua, index) => (
                   <Card key={index} className="bg-card/60 backdrop-blur-md border transition-smooth hover:shadow-lg">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-lg flex-1">{dua}</p>
-                        <div className="flex gap-1 flex-shrink-0">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                            onClick={() => handleCopy(dua)}
-                            title="Copy dua"
-                          >
-                            <Copy className="w-3 h-3" />
-                          </Button>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        <BookHeart className="w-5 h-5 text-primary" />
+                        {dua.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Arabic Text - RTL */}
+                      <div className="bg-muted/30 p-4 rounded-lg">
+                        <p
+                          className="text-2xl leading-loose text-right font-arabic"
+                          dir="rtl"
+                          lang="ar"
+                        >
+                          {dua.arabicText}
+                        </p>
+                      </div>
+
+                      {/* Transliteration */}
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          {t('dua.transliteration')}
+                        </p>
+                        <p className="text-base italic text-foreground/90 leading-relaxed">
+                          {dua.transliteration}
+                        </p>
+                      </div>
+
+                      {/* Meaning */}
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          {t('dua.meaning')}
+                        </p>
+                        <p className="text-base text-foreground/90 leading-relaxed">
+                          {dua.meaning}
+                        </p>
+                      </div>
+
+                      {/* Source */}
+                      <div className="flex items-start gap-2 bg-primary/5 p-3 rounded-lg">
+                        <BookOpen className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <div className="space-y-1 flex-1">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            {t('dua.source')}
+                          </p>
+                          <p className="text-sm text-foreground/90">
+                            {dua.source}
+                          </p>
                         </div>
+                      </div>
+
+                      {/* When to Recite */}
+                      <div className="space-y-1">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          {t('dua.whenToRecite')}
+                        </p>
+                        <p className="text-sm text-foreground/80">
+                          {dua.whenToRecite}
+                        </p>
+                      </div>
+
+                      {/* Copy Button */}
+                      <div className="pt-2 border-t">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => handleCopy(`${dua.arabicText}\n\n${dua.transliteration}\n\n${dua.meaning}\n\n${t('dua.source')}: ${dua.source}`)}
+                        >
+                          <Copy className="w-4 h-4 mr-2" />
+                          {t('dua.copyDua')}
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>

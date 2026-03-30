@@ -57,8 +57,17 @@ export async function answerAction(
   }
 }
 
+type Dua = {
+  title: string;
+  arabicText: string;
+  transliteration: string;
+  meaning: string;
+  source: string;
+  whenToRecite: string;
+};
+
 type DuaState = {
-  recommendations: string[] | null;
+  recommendations: Dua[] | null;
   error: string | null;
 };
 
@@ -67,13 +76,17 @@ export async function duaAction(
   formData: FormData
 ): Promise<DuaState> {
   const situation = formData.get('situation');
+  const language = formData.get('language') as 'en' | 'tr' | 'ar' | null;
 
   if (!situation || typeof situation !== 'string') {
     return { recommendations: null, error: 'Invalid situation provided.' };
   }
 
   try {
-    const result = await generateDuaRecommendations({ situation });
+    const result = await generateDuaRecommendations({
+      situation,
+      language: language || 'en'
+    });
     return { recommendations: result.recommendations, error: null };
   } catch (error) {
     console.error(error);
