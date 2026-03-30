@@ -5,7 +5,7 @@ import { answerAction } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw } from 'lucide-react';
+import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw, BookOpen } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
@@ -314,20 +314,25 @@ export default function Home() {
                   </div>
                 </div>
                 {msg.references && msg.references.length > 0 && (
-                  <Card className="max-w-full w-fit bg-card/60 border-dashed">
-                    <CardHeader className="p-2 pb-0">
-                      <CardTitle className="text-xs font-medium">References</CardTitle>
+                  <Card className="max-w-full w-fit bg-primary/5 border-primary/20 shadow-sm">
+                    <CardHeader className="p-3 pb-2">
+                      <CardTitle className="text-sm font-semibold flex items-center gap-2 text-primary">
+                        <BookOpen className="w-4 h-4" />
+                        Kaynaklar
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-2">
-                      <ul className="text-xs text-muted-foreground list-disc list-inside space-y-1">
+                    <CardContent className="p-3 pt-0">
+                      <ul className="text-xs space-y-2">
                         {msg.references.map((ref, i) => (
                           <li
                             key={i}
-                            className="cursor-pointer hover:text-primary hover:underline"
+                            className="flex items-start gap-2 cursor-pointer hover:text-primary transition-colors group"
                             onClick={() => handleCopy(ref)}
-                            title="Click to copy"
+                            title="Kopyalamak için tıklayın"
                           >
-                            {ref}
+                            <span className="text-primary/60 font-mono mt-0.5">•</span>
+                            <span className="flex-1 group-hover:underline">{ref}</span>
+                            <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" />
                           </li>
                         ))}
                       </ul>

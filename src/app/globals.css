@@ -207,4 +207,52 @@ body {
 
 .message-leave {
   animation: slideOut 0.3s ease-out;
+
+/* Source References Styling */
+.source-reference {
+  position: relative;
+  padding-left: 1rem;
+  border-left: 2px solid hsl(var(--primary) / 0.3);
+  transition: all 0.2s ease;
+}
+
+.source-reference:hover {
+  border-left-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.05);
+}
+
+.source-reference::before {
+  content: '📖';
+  position: absolute;
+  left: -0.5rem;
+  opacity: 0.6;
+}
+
+/* Reference Card Animation */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reference-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Markdown Blockquote for References */
+blockquote.reference-quote {
+  border-left: 3px solid hsl(var(--primary));
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--primary) / 0.05);
+  border-radius: 0.25rem;
+  padding: 0.75rem 1rem;
+}
 }
