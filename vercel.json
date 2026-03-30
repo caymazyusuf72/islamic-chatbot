@@ -3,8 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "env": {
-    "GEMINI_API_KEY": "@gemini_api_key"
-  }
+  "outputDirectory": ".next"
 }
