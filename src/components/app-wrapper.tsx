@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { SplashScreen } from './splash-screen';
+import { LanguageProvider } from '@/contexts/language-context';
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [showSplash, setShowSplash] = useState(true);
@@ -31,11 +32,11 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <LanguageProvider>
       {showSplash && <SplashScreen />}
       <div className={showSplash ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}>
         {children}
       </div>
-    </>
+    </LanguageProvider>
   );
 }
