@@ -19,9 +19,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AppWrapper>
-      <LayoutContent>{children}</LayoutContent>
-    </AppWrapper>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>NurAI - Islamic AI Assistant</title>
+        <meta name="description" content="Your AI assistant for Islamic knowledge, guided by the Quran and Sunnah." />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
+      </head>
+      <body className="font-body antialiased">
+        <AppWrapper>
+          <LayoutContent>{children}</LayoutContent>
+        </AppWrapper>
+      </body>
+    </html>
   );
 }
 

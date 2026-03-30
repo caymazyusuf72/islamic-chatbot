@@ -29,36 +29,16 @@ function AppContent({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (!isMounted) {
-    return (
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <title>NurAI</title>
-          <meta name="description" content="Your AI assistant for Islamic knowledge, guided by the Quran and Sunnah." />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        </head>
-        <body className="font-body antialiased" />
-      </html>
-    );
+    return null;
   }
 
   return (
-    <html lang={language} suppressHydrationWarning>
-      <head>
-        <title>NurAI</title>
-        <meta name="description" content="Your AI assistant for Islamic knowledge, guided by the Quran and Sunnah." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased">
-        {showSplash && <SplashScreen />}
-        <div className={showSplash ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}>
-          {children}
-        </div>
-      </body>
-    </html>
+    <>
+      {showSplash && <SplashScreen />}
+      <div className={showSplash ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}>
+        {children}
+      </div>
+    </>
   );
 }
 
