@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw, BookOpen, Baby } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
@@ -254,6 +256,35 @@ export default function Home() {
       description: t('chat.exportedSuccessfully'),
     });
   };
+
+  const handleExampleQuestion = (question: string) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: question,
+      timestamp: Date.now(),
+    };
+    
+    setMessages(prev => [...prev, newMessage]);
+    setPending(true);
+    setError(null);
+
+    answerAction([...messages, newMessage], language, kidsMode).then(result => {
+      if (result.response) {
+        const responseMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: result.response.content,
+          references: result.response.references,
+          timestamp: Date.now(),
+        };
+        setMessages(prev => [...prev, responseMessage]);
+      } else if (result.error) {
+        setError(result.error);
+      }
+      setPending(false);
+    });
+  };
   
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -271,13 +302,26 @@ export default function Home() {
           <Sparkles className="text-primary" />
           <h1 className="text-xl font-headline font-bold tracking-wider">{t('nav.aiAnswers')}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={handleExportChat} title="Export chat">
-            <Download className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleClearChat} title="Clear chat" disabled={messages.length === 0}>
-            <Trash2 className="w-4 h-4" />
-          </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Switch
+              id="kids-mode"
+              checked={kidsMode}
+              onCheckedChange={toggleKidsMode}
+            />
+            <Label htmlFor="kids-mode" className="flex items-center gap-1 cursor-pointer">
+              <Baby className="w-4 h-4" />
+              <span className="text-sm">{t('kidsMode.title')}</span>
+            </Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={handleExportChat} title="Export chat">
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleClearChat} title="Clear chat" disabled={messages.length === 0}>
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -288,6 +332,49 @@ export default function Home() {
               <p className="font-headline text-2xl mb-2">{t('chat.greeting')}</p>
               <p>{t('chat.howCanIHelp')}</p>
               <p className="text-xs mt-4">{t('chat.askAboutIslam')}</p>
+              
+              {kidsMode && (
+                <Card className="mt-8 max-w-2xl mx-auto bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center justify-center gap-2">
+                      <Baby className="w-5 h-5" />
+                      {t('kidsMode.tryExample')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <Button
+                        variant="outline"
+                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion1'))}
+                      >
+                        {t('kidsMode.exampleQuestion1')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion2'))}
+                      >
+                        {t('kidsMode.exampleQuestion2')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion3'))}
+                      >
+                        {t('kidsMode.exampleQuestion3')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion4'))}
+                      >
+                        {t('kidsMode.exampleQuestion4')}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
 
