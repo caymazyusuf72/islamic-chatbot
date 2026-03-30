@@ -1,16 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Clock, MapPin, RefreshCw, Moon, Sun } from 'lucide-react';
+import { Clock, MapPin, RefreshCw, Moon, Sun, MapPinned } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { getPrayerTimes, getUserLocation, getNextPrayer, type PrayerTimesData, type PrayerTimes } from '@/lib/prayer-times';
+import { Input } from '@/components/ui/input';
+import { getPrayerTimes, getPrayerTimesByCity, getUserLocation, getNextPrayer, type PrayerTimesData, type PrayerTimes } from '@/lib/prayer-times';
 
 export default function PrayerTimesPage() {
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [manualLoading, setManualLoading] = useState(false);
 
   const fetchPrayerTimes = async (lat?: number, lon?: number) => {
     try {
@@ -32,22 +37,50 @@ export default function PrayerTimesPage() {
       const data = await getPrayerTimes(coords.latitude, coords.longitude);
       if (data) {
         setPrayerData(data);
+        setShowManualInput(false);
       } else {
         setError('Failed to fetch prayer times');
       }
     } catch (err) {
       console.error('Error:', err);
       if (err instanceof Error) {
-        if (err.name === 'GeolocationPositionError') {
-          setError('Location access denied. Please enable location services.');
+        if (err.message.includes('Geolocation') || err.message.includes('denied')) {
+          setError('Location access denied. Please enter your city manually below.');
+          setShowManualInput(true);
         } else {
           setError(err.message);
         }
       } else {
-        setError('An unknown error occurred');
+        setError('Unable to get location. Please enter your city manually below.');
+        setShowManualInput(true);
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPrayerTimesByCity = async () => {
+    if (!city.trim() || !country.trim()) {
+      setError('Please enter both city and country');
+      return;
+    }
+
+    try {
+      setManualLoading(true);
+      setError(null);
+      
+      const data = await getPrayerTimesByCity(city.trim(), country.trim());
+      if (data) {
+        setPrayerData(data);
+        setShowManualInput(false);
+      } else {
+        setError('Failed to fetch prayer times for the specified city. Please check the city and country names.');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Failed to fetch prayer times. Please check the city and country names.');
+    } finally {
+      setManualLoading(false);
     }
   };
 
@@ -58,6 +91,8 @@ export default function PrayerTimesPage() {
   const handleRefresh = () => {
     if (location) {
       fetchPrayerTimes(location.latitude, location.longitude);
+    } else {
+      fetchPrayerTimes();
     }
   };
 
@@ -107,12 +142,75 @@ export default function PrayerTimesPage() {
         )}
 
         {error && (
-          <Card className="w-full max-w-md mx-auto bg-destructive/10 border-destructive">
-            <CardContent className="p-6 text-center">
-              <p className="text-destructive mb-4">{error}</p>
-              <Button onClick={() => fetchPrayerTimes()}>Try Again</Button>
-            </CardContent>
-          </Card>
+          <div className="max-w-md mx-auto space-y-4">
+            <Card className="bg-destructive/10 border-destructive">
+              <CardContent className="p-6 text-center">
+                <p className="text-destructive mb-4">{error}</p>
+                {!showManualInput && (
+                  <div className="flex gap-2 justify-center">
+                    <Button onClick={() => fetchPrayerTimes()}>Try Again</Button>
+                    <Button variant="outline" onClick={() => setShowManualInput(true)}>
+                      Enter City Manually
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {showManualInput && (
+              <Card className="bg-card/80 backdrop-blur-md border">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MapPinned className="w-5 h-5 text-primary" />
+                    Enter Your Location
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="city" className="text-sm font-medium">
+                      City
+                    </label>
+                    <Input
+                      id="city"
+                      placeholder="e.g., Istanbul, London, New York"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && fetchPrayerTimesByCity()}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="country" className="text-sm font-medium">
+                      Country
+                    </label>
+                    <Input
+                      id="country"
+                      placeholder="e.g., Turkey, United Kingdom, USA"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && fetchPrayerTimesByCity()}
+                    />
+                  </div>
+                  <Button
+                    onClick={fetchPrayerTimesByCity}
+                    className="w-full"
+                    disabled={manualLoading}
+                  >
+                    {manualLoading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Get Prayer Times
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
 
         {prayerData && (

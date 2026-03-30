@@ -27,7 +27,7 @@ export interface PrayerTimesData {
 }
 
 /**
- * Fetch prayer times from Aladhan API
+ * Fetch prayer times from Aladhan API using coordinates
  */
 export async function getPrayerTimes(
   latitude: number,
@@ -70,6 +70,54 @@ export async function getPrayerTimes(
     };
   } catch (error) {
     console.error('Error fetching prayer times:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch prayer times from Aladhan API using city and country
+ */
+export async function getPrayerTimesByCity(
+  city: string,
+  country: string,
+  method: number = 2
+): Promise<PrayerTimesData | null> {
+  try {
+    const response = await fetch(
+      `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${method}`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch prayer times for the specified city');
+    }
+
+    const data = await response.json();
+    const timings = data.data.timings;
+    const dateInfo = data.data.date;
+    const meta = data.data.meta;
+
+    return {
+      date: dateInfo.readable,
+      hijriDate: `${dateInfo.hijri.day} ${dateInfo.hijri.month.en} ${dateInfo.hijri.year}`,
+      times: {
+        Fajr: timings.Fajr,
+        Dhuhr: timings.Dhuhr,
+        Asr: timings.Asr,
+        Maghrib: timings.Maghrib,
+        Isha: timings.Isha,
+        Sunrise: timings.Sunrise,
+        Imsak: timings.Imsak,
+        Midnight: timings.Midnight,
+      },
+      location: {
+        city: city,
+        country: country,
+        latitude: meta.latitude,
+        longitude: meta.longitude,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching prayer times by city:', error);
     return null;
   }
 }
