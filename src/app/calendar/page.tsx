@@ -13,12 +13,20 @@ import {
 } from '@/lib/hijri-calendar';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
+import { CalendarSkeleton } from '@/components/loading-skeletons';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<HijriDateInterface | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { language } = useLanguage();
   const t = (key: string) => getTranslation(key, language);
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const hijriDate = toHijri(currentDate);
   const specialDates = getSpecialIslamicDates(hijriDate.year);
@@ -83,57 +91,73 @@ export default function CalendarPage() {
   ];
 
   return (
-    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
-      <header className="p-4 border-b flex items-center gap-2">
-        <CalendarIcon className="text-primary" />
-        <h1 className="text-xl font-headline font-bold tracking-wider">{t('calendar.title')}</h1>
+    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm page-enter">
+      <header className="p-4 border-b flex items-center gap-2" role="banner">
+        <CalendarIcon className="text-primary" aria-hidden="true" />
+        <h1 className="text-lg sm:text-xl font-headline font-bold tracking-wider">{t('calendar.title')}</h1>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-6xl mx-auto space-y-6">
+      <div className="flex-1 overflow-y-auto p-4" role="main">
+        {isLoading ? (
+          <CalendarSkeleton />
+        ) : (
+        <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
           {/* Current Hijri Date Display */}
-          <Card className="bg-primary/10 backdrop-blur-md border-primary">
-            <CardContent className="p-6 text-center">
+          <Card className="bg-primary/10 backdrop-blur-md border-primary hover-scale" role="region" aria-label="Today's Hijri date">
+            <CardContent className="p-4 sm:p-6 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Moon className="w-5 h-5 text-primary" />
-                <p className="text-sm text-muted-foreground">{t('calendar.todayHijriDate')}</p>
+                <Moon className="w-5 h-5 text-primary" aria-hidden="true" />
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('calendar.todayHijriDate')}</p>
               </div>
-              <p className="text-3xl font-bold text-primary mb-2">
+              <p className="text-2xl sm:text-3xl font-bold text-primary mb-2">
                 {hijriDate.day} {hijriDate.monthNameArabic}
               </p>
-              <p className="text-lg text-primary/80">
+              <p className="text-base sm:text-lg text-primary/80">
                 {hijriDate.day} {hijriDate.monthName} {hijriDate.year} AH
               </p>
             </CardContent>
           </Card>
 
           {/* Calendar Grid */}
-          <Card className="bg-card/80 backdrop-blur-md border">
+          <Card className="bg-card/80 backdrop-blur-md border hover-lift">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <Button variant="ghost" size="icon" onClick={handlePreviousMonth}>
-                  <ChevronLeft className="w-5 h-5" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handlePreviousMonth}
+                  aria-label="Previous month"
+                  className="focus-ring"
+                >
+                  <ChevronLeft className="w-5 h-5" aria-hidden="true" />
                 </Button>
                 <div className="text-center">
-                  <CardTitle className="font-headline text-2xl">
+                  <CardTitle className="font-headline text-lg sm:text-2xl">
                     {hijriDate.monthName} {hijriDate.year}
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                     {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </p>
                 </div>
-                <Button variant="ghost" size="icon" onClick={handleNextMonth}>
-                  <ChevronRight className="w-5 h-5" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleNextMonth}
+                  aria-label="Next month"
+                  className="focus-ring"
+                >
+                  <ChevronRight className="w-5 h-5" aria-hidden="true" />
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-2 sm:p-4">
               {/* Week Days Header */}
-              <div className="grid grid-cols-7 gap-1 mb-2">
+              <div className="grid grid-cols-7 gap-1 mb-2" role="row">
                 {weekDays.map((day) => (
                   <div
                     key={day}
-                    className="text-center text-xs font-medium text-muted-foreground py-2"
+                    className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2"
+                    role="columnheader"
                   >
                     {day}
                   </div>
@@ -141,7 +165,7 @@ export default function CalendarPage() {
               </div>
 
               {/* Calendar Days */}
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Calendar days">
                 {/* Empty cells for days before the 1st */}
                 {Array.from({ length: firstDayOffset }).map((_, index) => (
                   <div key={`empty-${index}`} className="aspect-square" />
@@ -159,18 +183,21 @@ export default function CalendarPage() {
                       key={day}
                       onClick={() => handleDateClick(day)}
                       className={`
-                        aspect-square rounded-lg flex items-center justify-center text-sm font-medium
-                        transition-all hover:bg-primary/20
+                        aspect-square rounded-lg flex items-center justify-center text-xs sm:text-sm font-medium
+                        transition-all hover:bg-primary/20 focus-ring
                         ${today ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
                         ${selected && !today ? 'bg-primary/20 ring-2 ring-primary' : ''}
                         ${special && !today && !selected ? 'text-primary' : ''}
                       `}
+                      aria-label={`${day} ${hijriDate.monthName}${today ? ' - Today' : ''}${special ? ' - Special date' : ''}`}
+                      aria-pressed={selected}
                       title={special ? getSpecialDateInfo(day)?.description : ''}
+                      role="gridcell"
                     >
                       <div className="relative">
                         {day}
                         {special && (
-                          <Star className="absolute -top-2 -right-2 w-3 h-3 text-primary fill-primary" />
+                          <Star className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-2 h-2 sm:w-3 sm:h-3 text-primary fill-primary" aria-hidden="true" />
                         )}
                       </div>
                     </button>
@@ -179,7 +206,13 @@ export default function CalendarPage() {
               </div>
 
               <div className="flex justify-center mt-4">
-                <Button onClick={handleToday} variant="outline" size="sm">
+                <Button
+                  onClick={handleToday}
+                  variant="outline"
+                  size="sm"
+                  className="focus-ring"
+                  aria-label="Go to today's date"
+                >
                   {t('calendar.today')}
                 </Button>
               </div>
@@ -188,14 +221,14 @@ export default function CalendarPage() {
 
           {/* Selected Date Details */}
           {selectedDate && (
-            <Card className="bg-card/80 backdrop-blur-md border">
+            <Card className="bg-card/80 backdrop-blur-md border hover-lift animate-slide-in" role="region" aria-label="Selected date details">
               <CardHeader>
-                <CardTitle className="font-headline text-xl">
+                <CardTitle className="font-headline text-base sm:text-xl">
                   {t('calendar.selectedDate')}: {selectedDate.day} {selectedDate.monthName} {selectedDate.year}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {formatHijriDate(selectedDate)}
                 </p>
               </CardContent>
@@ -203,26 +236,35 @@ export default function CalendarPage() {
           )}
 
           {/* Special Islamic Dates */}
-          <Card className="bg-card/80 backdrop-blur-md border">
+          <Card className="bg-card/80 backdrop-blur-md border hover-lift" role="region" aria-label="Special Islamic dates">
             <CardHeader>
-              <CardTitle className="font-headline text-xl flex items-center gap-2">
-                <Star className="w-5 h-5 text-primary" />
+              <CardTitle className="font-headline text-base sm:text-xl flex items-center gap-2">
+                <Star className="w-5 h-5 text-primary" aria-hidden="true" />
                 {t('calendar.specialDates')} {hijriDate.year} AH
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3" role="list">
                 {specialDates.map((event, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer"
+                    className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-smooth cursor-pointer focus-ring"
                     onClick={() => setSelectedDate(event.date)}
+                    role="listitem button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedDate(event.date);
+                      }
+                    }}
+                    aria-label={`${event.name} on ${event.date.monthName} ${event.date.day}`}
                   >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <span className="text-sm font-bold text-primary">{event.date.day}</span>
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-xs sm:text-sm font-bold text-primary">{event.date.day}</span>
                     </div>
                     <div>
-                      <p className="font-medium text-sm">{event.name}</p>
+                      <p className="font-medium text-xs sm:text-sm">{event.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {event.date.monthName} {event.date.day}, {event.date.year}
                       </p>
@@ -234,32 +276,35 @@ export default function CalendarPage() {
           </Card>
 
           {/* Month List */}
-          <Card className="bg-card/80 backdrop-blur-md border">
+          <Card className="bg-card/80 backdrop-blur-md border hover-lift" role="region" aria-label="Hijri months">
             <CardHeader>
-              <CardTitle className="font-headline text-xl">{t('calendar.allMonths')}</CardTitle>
+              <CardTitle className="font-headline text-base sm:text-xl">{t('calendar.allMonths')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" role="list">
                 {hijriMonths.map((month) => (
                   <Button
                     key={month.number}
                     variant={month.number === hijriDate.month ? 'default' : 'outline'}
                     size="sm"
-                    className="justify-start"
+                    className="justify-start focus-ring text-xs sm:text-sm"
                     onClick={() => {
                       const newDate = new Date(currentDate);
                       newDate.setMonth(month.number - 1);
                       setCurrentDate(newDate);
                     }}
+                    aria-label={`Go to ${month.name}`}
+                    aria-pressed={month.number === hijriDate.month}
                   >
                     <span className="mr-2">{month.number}</span>
-                    <span className="text-xs">{month.name}</span>
+                    <span className="text-xs truncate">{month.name}</span>
                   </Button>
                 ))}
               </div>
             </CardContent>
           </Card>
         </div>
+        )}
       </div>
     </div>
   );

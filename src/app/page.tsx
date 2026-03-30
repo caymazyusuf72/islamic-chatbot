@@ -14,6 +14,7 @@ import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
+import { ChatMessageSkeleton, ErrorDisplay } from '@/components/loading-skeletons';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -70,16 +71,17 @@ function TTSButton({ text }: { text: string }) {
       variant="ghost"
       onClick={handlePlayback}
       disabled={isLoading}
-      className="h-7 w-7 text-muted-foreground"
+      className="h-7 w-7 text-muted-foreground focus-ring"
+      aria-label={isPlaying ? 'Stop reading' : 'Read aloud'}
     >
       {isLoading ? (
-        <LoaderCircle className="animate-spin" />
+        <LoaderCircle className="animate-spin" aria-hidden="true" />
       ) : isPlaying ? (
-        <StopCircle />
+        <StopCircle aria-hidden="true" />
       ) : (
-        <Volume2 />
+        <Volume2 aria-hidden="true" />
       )}
-      <span className="sr-only">Read aloud</span>
+      <span className="sr-only">{isPlaying ? 'Stop reading' : 'Read aloud'}</span>
     </Button>
   );
 }
@@ -296,77 +298,92 @@ export default function Home() {
   }, [messages, pending]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
-      <header className="p-4 border-b flex items-center justify-between">
+    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm page-enter">
+      <header className="p-3 sm:p-4 border-b flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" role="banner">
         <div className="flex items-center gap-2">
-          <Sparkles className="text-primary" />
-          <h1 className="text-xl font-headline font-bold tracking-wider">{t('nav.aiAnswers')}</h1>
+          <Sparkles className="text-primary" aria-hidden="true" />
+          <h1 className="text-lg sm:text-xl font-headline font-bold tracking-wider">{t('nav.aiAnswers')}</h1>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
           <div className="flex items-center gap-2">
             <Switch
               id="kids-mode"
               checked={kidsMode}
               onCheckedChange={toggleKidsMode}
+              className="focus-ring"
+              aria-label={t('kidsMode.title')}
             />
-            <Label htmlFor="kids-mode" className="flex items-center gap-1 cursor-pointer">
-              <Baby className="w-4 h-4" />
-              <span className="text-sm">{t('kidsMode.title')}</span>
+            <Label htmlFor="kids-mode" className="flex items-center gap-1 cursor-pointer text-xs sm:text-sm">
+              <Baby className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
+              <span className="hidden sm:inline">{t('kidsMode.title')}</span>
             </Label>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={handleExportChat} title="Export chat">
-              <Download className="w-4 h-4" />
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleExportChat}
+              aria-label="Export chat"
+              className="focus-ring h-8 w-8 sm:h-10 sm:w-10"
+            >
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleClearChat} title="Clear chat" disabled={messages.length === 0}>
-              <Trash2 className="w-4 h-4" />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleClearChat}
+              aria-label="Clear chat"
+              disabled={messages.length === 0}
+              className="focus-ring h-8 w-8 sm:h-10 sm:w-10"
+            >
+              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
       </header>
 
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-        <div className="max-w-4xl mx-auto space-y-8">
+      <ScrollArea className="flex-1 p-3 sm:p-4" ref={scrollAreaRef} role="main">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-8">
           {messages.length === 0 && !pending && (
-            <div className="text-center text-muted-foreground pt-16">
-              <p className="font-headline text-2xl mb-2">{t('chat.greeting')}</p>
-              <p>{t('chat.howCanIHelp')}</p>
-              <p className="text-xs mt-4">{t('chat.askAboutIslam')}</p>
+            <div className="text-center text-muted-foreground pt-8 sm:pt-16 px-4">
+              <p className="font-headline text-xl sm:text-2xl mb-2">{t('chat.greeting')}</p>
+              <p className="text-sm sm:text-base">{t('chat.howCanIHelp')}</p>
+              <p className="text-xs sm:text-sm mt-4">{t('chat.askAboutIslam')}</p>
               
               {kidsMode && (
-                <Card className="mt-8 max-w-2xl mx-auto bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                <Card className="mt-6 sm:mt-8 max-w-2xl mx-auto bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 hover-lift">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center justify-center gap-2">
-                      <Baby className="w-5 h-5" />
+                    <CardTitle className="text-base sm:text-lg flex items-center justify-center gap-2">
+                      <Baby className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
                       {t('kidsMode.tryExample')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       <Button
                         variant="outline"
-                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        className="h-auto py-2 sm:py-3 px-3 sm:px-4 text-left text-xs sm:text-sm justify-start hover:bg-primary/10 hover:border-primary/40 focus-ring transition-smooth"
                         onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion1'))}
                       >
                         {t('kidsMode.exampleQuestion1')}
                       </Button>
                       <Button
                         variant="outline"
-                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        className="h-auto py-2 sm:py-3 px-3 sm:px-4 text-left text-xs sm:text-sm justify-start hover:bg-primary/10 hover:border-primary/40 focus-ring transition-smooth"
                         onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion2'))}
                       >
                         {t('kidsMode.exampleQuestion2')}
                       </Button>
                       <Button
                         variant="outline"
-                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        className="h-auto py-2 sm:py-3 px-3 sm:px-4 text-left text-xs sm:text-sm justify-start hover:bg-primary/10 hover:border-primary/40 focus-ring transition-smooth"
                         onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion3'))}
                       >
                         {t('kidsMode.exampleQuestion3')}
                       </Button>
                       <Button
                         variant="outline"
-                        className="h-auto py-3 px-4 text-left justify-start hover:bg-primary/10 hover:border-primary/40"
+                        className="h-auto py-2 sm:py-3 px-3 sm:px-4 text-left text-xs sm:text-sm justify-start hover:bg-primary/10 hover:border-primary/40 focus-ring transition-smooth"
                         onClick={() => handleExampleQuestion(t('kidsMode.exampleQuestion4'))}
                       >
                         {t('kidsMode.exampleQuestion4')}
@@ -379,71 +396,84 @@ export default function Home() {
           )}
 
           {messages.map((msg, index) => (
-            <div key={msg.id} className={`flex items-start gap-4 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+            <div
+              key={msg.id}
+              className={`flex items-start gap-2 sm:gap-4 message-enter ${msg.role === 'user' ? 'justify-end' : ''}`}
+              role="article"
+              aria-label={`${msg.role === 'user' ? 'Your' : 'Assistant'} message`}
+            >
               {msg.role === 'assistant' && (
-                <Avatar className="w-8 h-8 border-2 border-primary">
-                  <AvatarFallback><Bot className="w-5 h-5" /></AvatarFallback>
+                <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-primary flex-shrink-0">
+                  <AvatarFallback><Bot className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" /></AvatarFallback>
                 </Avatar>
               )}
-              <div className={`flex flex-col gap-2 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`rounded-lg p-4 flex items-start gap-2 ${msg.role === 'user' ? 'bg-primary/20' : 'bg-card/80 backdrop-blur-md border'}`}>
-                  <div className="flex-1">
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
+              <div className={`flex flex-col gap-2 max-w-[85%] sm:max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                <div className={`rounded-lg p-3 sm:p-4 flex items-start gap-2 transition-smooth hover-lift ${msg.role === 'user' ? 'bg-primary/20' : 'bg-card/80 backdrop-blur-md border'}`}>
+                  <div className="flex-1 min-w-0">
+                    <p className="whitespace-pre-wrap text-sm sm:text-base break-words">{msg.content}</p>
                   </div>
-                  <div className="flex flex-col gap-1 flex-shrink-0">
+                  <div className="flex flex-col gap-1 flex-shrink-0 ml-2">
                     {msg.role === 'assistant' && <TTSButton text={msg.content} />}
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                      className="h-6 w-6 text-muted-foreground hover:text-foreground focus-ring"
                       onClick={() => handleCopy(msg.content)}
-                      title="Copy"
+                      aria-label="Copy message"
                     >
-                      <Copy className="w-3 h-3" />
+                      <Copy className="w-3 h-3" aria-hidden="true" />
                     </Button>
                     {error && msg.role === 'assistant' && index === messages.length - 1 && (
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground focus-ring"
                         onClick={() => handleRetry(index)}
-                        title="Retry"
+                        aria-label="Retry"
                         disabled={retrying}
                       >
-                        <RotateCw className={`w-3 h-3 ${retrying ? 'animate-spin' : ''}`} />
+                        <RotateCw className={`w-3 h-3 ${retrying ? 'animate-spin' : ''}`} aria-hidden="true" />
                       </Button>
                     )}
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                      className="h-6 w-6 text-muted-foreground hover:text-destructive focus-ring"
                       onClick={() => handleDeleteMessage(msg.id)}
-                      title="Delete"
+                      aria-label="Delete message"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-3 h-3" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
                 {msg.references && msg.references.length > 0 && (
-                  <Card className="max-w-full w-fit bg-primary/5 border-primary/20 shadow-sm">
-                    <CardHeader className="p-3 pb-2">
-                      <CardTitle className="text-sm font-semibold flex items-center gap-2 text-primary">
-                        <BookOpen className="w-4 h-4" />
+                  <Card className="max-w-full w-fit bg-primary/5 border-primary/20 shadow-sm hover-lift reference-card">
+                    <CardHeader className="p-2 sm:p-3 pb-2">
+                      <CardTitle className="text-xs sm:text-sm font-semibold flex items-center gap-2 text-primary">
+                        <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
                         {t('chat.references')}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-3 pt-0">
-                      <ul className="text-xs space-y-2">
+                    <CardContent className="p-2 sm:p-3 pt-0">
+                      <ul className="text-xs space-y-2" role="list">
                         {msg.references.map((ref, i) => (
                           <li
                             key={i}
-                            className="flex items-start gap-2 cursor-pointer hover:text-primary transition-colors group"
+                            className="flex items-start gap-2 cursor-pointer hover:text-primary transition-colors group focus-ring rounded p-1"
                             onClick={() => handleCopy(ref)}
-                            title="Kopyalamak için tıklayın"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                handleCopy(ref);
+                              }
+                            }}
+                            tabIndex={0}
+                            role="button"
+                            aria-label={`Copy reference: ${ref}`}
                           >
-                            <span className="text-primary/60 font-mono mt-0.5">•</span>
-                            <span className="flex-1 group-hover:underline">{ref}</span>
-                            <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" />
+                            <span className="text-primary/60 font-mono mt-0.5" aria-hidden="true">•</span>
+                            <span className="flex-1 group-hover:underline break-words">{ref}</span>
+                            <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" aria-hidden="true" />
                           </li>
                         ))}
                       </ul>
@@ -452,39 +482,38 @@ export default function Home() {
                 )}
               </div>
               {msg.role === 'user' && (
-                 <Avatar className="w-8 h-8 border-2 border-muted">
-                  <AvatarFallback><User className="w-5 h-5" /></AvatarFallback>
+                 <Avatar className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-muted flex-shrink-0">
+                  <AvatarFallback><User className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" /></AvatarFallback>
                 </Avatar>
               )}
             </div>
           ))}
-          {pending && (
-            <div className="flex items-start gap-4">
-              <Avatar className="w-8 h-8 border-2 border-primary animate-pulse">
-                <AvatarFallback><Bot className="w-5 h-5" /></AvatarFallback>
-              </Avatar>
-              <div className="rounded-lg p-4 bg-card/80 backdrop-blur-md border flex items-center gap-2">
-                <LoaderCircle className="animate-spin w-4 h-4" />
-                <span className="text-muted-foreground text-sm">{t('chat.thinking')}</span>
-              </div>
+          {pending && <ChatMessageSkeleton />}
+          {error && (
+            <div className="animate-fade-in">
+              <ErrorDisplay
+                message={error}
+                onRetry={() => formRef.current?.requestSubmit()}
+                retryLabel={t('common.tryAgain')}
+              />
             </div>
           )}
-           {error && <p className="text-destructive text-center">{error}</p>}
         </div>
       </ScrollArea>
 
-      <div className="p-4 border-t bg-background/80 backdrop-blur-sm">
+      <div className="p-3 sm:p-4 border-t bg-background/80 backdrop-blur-sm">
         <form
           ref={formRef}
           onSubmit={handleFormSubmit}
-          className="max-w-4xl mx-auto flex items-start gap-4"
+          className="max-w-4xl mx-auto flex items-end gap-2 sm:gap-4"
         >
           <Textarea
             name="question"
             placeholder={t('chat.askQuestion')}
-            className="flex-1 resize-none bg-input"
+            className="flex-1 resize-none bg-input focus-ring text-sm sm:text-base min-h-[44px]"
             rows={1}
             disabled={pending}
+            aria-label={t('chat.askQuestion')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -492,12 +521,18 @@ export default function Home() {
               }
             }}
           />
-          <Button type="submit" size="icon" disabled={pending}>
-            {pending ? <LoaderCircle className="animate-spin" /> : <Send />}
+          <Button
+            type="submit"
+            size="icon"
+            disabled={pending}
+            className="focus-ring h-11 w-11 flex-shrink-0"
+            aria-label="Send message"
+          >
+            {pending ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Send aria-hidden="true" />}
             <span className="sr-only">Send</span>
           </Button>
         </form>
-         <p className="text-xs text-muted-foreground text-center mt-2">
+         <p className="text-xs sm:text-sm text-muted-foreground text-center mt-2">
           {t('chat.shiftForNewLine')}
         </p>
       </div>
