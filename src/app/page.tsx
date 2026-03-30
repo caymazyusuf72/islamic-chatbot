@@ -10,6 +10,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/language-context';
+import { getTranslation } from '@/lib/i18n';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -87,6 +89,8 @@ export default function Home() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { language } = useLanguage();
+  const t = (key: string) => getTranslation(key, language);
 
   // Load chat history from localStorage on mount
   useEffect(() => {
@@ -165,12 +169,12 @@ export default function Home() {
         responseMessage,
       ]);
       toast({
-        title: 'Success',
-        description: 'Response regenerated successfully.',
+        title: t('common.success'),
+        description: t('chat.responseRegenerated'),
       });
     } else if (result.error) {
       toast({
-        title: 'Error',
+        title: t('common.error'),
         description: result.error,
         variant: 'destructive',
       });
@@ -182,13 +186,13 @@ export default function Home() {
     try {
       await navigator.clipboard.writeText(text);
       toast({
-        title: 'Copied',
-        description: 'Text copied to clipboard.',
+        title: t('common.success'),
+        description: t('chat.copiedToClipboard'),
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to copy text.',
+        title: t('common.error'),
+        description: t('chat.failedToCopy'),
         variant: 'destructive',
       });
     }
@@ -197,16 +201,16 @@ export default function Home() {
   const handleDeleteMessage = (id: string) => {
     setMessages(prev => prev.filter(msg => msg.id !== id));
     toast({
-      title: 'Deleted',
-      description: 'Message deleted.',
+      title: t('common.success'),
+      description: t('chat.messageDeleted'),
     });
   };
 
   const handleClearChat = () => {
     setMessages([]);
     toast({
-      title: 'Cleared',
-      description: 'Chat history cleared.',
+      title: t('common.success'),
+      description: t('chat.chatCleared'),
     });
   };
 
@@ -226,8 +230,8 @@ export default function Home() {
     URL.revokeObjectURL(url);
     
     toast({
-      title: 'Exported',
-      description: 'Chat exported successfully.',
+      title: t('common.success'),
+      description: t('chat.exportedSuccessfully'),
     });
   };
   
@@ -245,7 +249,7 @@ export default function Home() {
       <header className="p-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="text-primary" />
-          <h1 className="text-xl font-headline font-bold tracking-wider">AI-Powered Answers</h1>
+          <h1 className="text-xl font-headline font-bold tracking-wider">{t('nav.aiAnswers')}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={handleExportChat} title="Export chat">
@@ -261,9 +265,9 @@ export default function Home() {
         <div className="max-w-4xl mx-auto space-y-8">
           {messages.length === 0 && !pending && (
             <div className="text-center text-muted-foreground pt-16">
-              <p className="font-headline text-2xl mb-2">Assalamu alaikum!</p>
-              <p>How can I help you today?</p>
-              <p className="text-xs mt-4">Ask me anything about Islam, based on the Quran, Hadith, and scholars.</p>
+              <p className="font-headline text-2xl mb-2">{t('chat.greeting')}</p>
+              <p>{t('chat.howCanIHelp')}</p>
+              <p className="text-xs mt-4">{t('chat.askAboutIslam')}</p>
             </div>
           )}
 
@@ -318,7 +322,7 @@ export default function Home() {
                     <CardHeader className="p-3 pb-2">
                       <CardTitle className="text-sm font-semibold flex items-center gap-2 text-primary">
                         <BookOpen className="w-4 h-4" />
-                        Kaynaklar
+                        {t('chat.references')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-3 pt-0">
@@ -354,7 +358,7 @@ export default function Home() {
               </Avatar>
               <div className="rounded-lg p-4 bg-card/80 backdrop-blur-md border flex items-center gap-2">
                 <LoaderCircle className="animate-spin w-4 h-4" />
-                <span className="text-muted-foreground text-sm">Thinking...</span>
+                <span className="text-muted-foreground text-sm">{t('chat.thinking')}</span>
               </div>
             </div>
           )}
@@ -370,7 +374,7 @@ export default function Home() {
         >
           <Textarea
             name="question"
-            placeholder="Ask a question..."
+            placeholder={t('chat.askQuestion')}
             className="flex-1 resize-none bg-input"
             rows={1}
             disabled={pending}
@@ -387,7 +391,7 @@ export default function Home() {
           </Button>
         </form>
          <p className="text-xs text-muted-foreground text-center mt-2">
-          Press <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"><span className="text-xs">Shift</span>+<CornerDownLeft size={10} /></kbd> for a new line.
+          {t('chat.shiftForNewLine')}
         </p>
       </div>
     </div>
