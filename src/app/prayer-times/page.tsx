@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getPrayerTimes, getPrayerTimesByCity, getUserLocation, getNextPrayer, type PrayerTimesData, type PrayerTimes } from '@/lib/prayer-times';
+import { useLanguage } from '@/contexts/language-context';
+import { getTranslation } from '@/lib/i18n';
 
 export default function PrayerTimesPage() {
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
@@ -16,6 +18,8 @@ export default function PrayerTimesPage() {
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [manualLoading, setManualLoading] = useState(false);
+  const { language } = useLanguage();
+  const t = (key: string) => getTranslation(key, language);
 
   const fetchPrayerTimes = async (lat?: number, lon?: number) => {
     try {
@@ -39,19 +43,19 @@ export default function PrayerTimesPage() {
         setPrayerData(data);
         setShowManualInput(false);
       } else {
-        setError('Failed to fetch prayer times');
+        setError(t('prayer.failedToFetch'));
       }
     } catch (err) {
       console.error('Error:', err);
       if (err instanceof Error) {
         if (err.message.includes('Geolocation') || err.message.includes('denied')) {
-          setError('Location access denied. Please enter your city manually below.');
+          setError(t('prayer.locationAccessDenied'));
           setShowManualInput(true);
         } else {
           setError(err.message);
         }
       } else {
-        setError('Unable to get location. Please enter your city manually below.');
+        setError(t('prayer.locationAccessDenied'));
         setShowManualInput(true);
       }
     } finally {
@@ -74,11 +78,11 @@ export default function PrayerTimesPage() {
         setPrayerData(data);
         setShowManualInput(false);
       } else {
-        setError('Failed to fetch prayer times for the specified city. Please check the city and country names.');
+        setError(t('prayer.failedToFetch'));
       }
     } catch (err) {
       console.error('Error:', err);
-      setError('Failed to fetch prayer times. Please check the city and country names.');
+      setError(t('prayer.failedToFetch'));
     } finally {
       setManualLoading(false);
     }
@@ -110,7 +114,7 @@ export default function PrayerTimesPage() {
           <div>
             <p className="font-medium">{name}</p>
             {isNext && nextPrayer && (
-              <p className="text-xs text-primary font-medium">Next: {nextPrayer.timeUntil}</p>
+              <p className="text-xs text-primary font-medium">{t('prayer.nextPrayer')}: {nextPrayer.timeUntil}</p>
             )}
           </div>
         </div>
@@ -124,9 +128,9 @@ export default function PrayerTimesPage() {
       <header className="p-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Clock className="text-primary" />
-          <h1 className="text-xl font-headline font-bold tracking-wider">Prayer Times</h1>
+          <h1 className="text-xl font-headline font-bold tracking-wider">{t('prayer.title')}</h1>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={loading}>
+        <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={loading} title={t('prayer.refresh')}>
           <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
         </Button>
       </header>
@@ -136,7 +140,7 @@ export default function PrayerTimesPage() {
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <RefreshCw className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-              <p className="text-muted-foreground">Fetching prayer times...</p>
+              <p className="text-muted-foreground">{t('prayer.fetchingPrayerTimes')}</p>
             </div>
           </div>
         )}
@@ -148,9 +152,9 @@ export default function PrayerTimesPage() {
                 <p className="text-destructive mb-4">{error}</p>
                 {!showManualInput && (
                   <div className="flex gap-2 justify-center">
-                    <Button onClick={() => fetchPrayerTimes()}>Try Again</Button>
+                    <Button onClick={() => fetchPrayerTimes()}>{t('prayer.tryAgain')}</Button>
                     <Button variant="outline" onClick={() => setShowManualInput(true)}>
-                      Enter City Manually
+                      {t('prayer.location')}
                     </Button>
                   </div>
                 )}
@@ -162,7 +166,7 @@ export default function PrayerTimesPage() {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <MapPinned className="w-5 h-5 text-primary" />
-                    Enter Your Location
+                    {t('prayer.location')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -223,8 +227,8 @@ export default function PrayerTimesPage() {
                   <p className="font-medium">{prayerData.location.city}</p>
                 </div>
                 <div className="space-y-1 text-sm text-muted-foreground">
-                  <p>Gregorian: {prayerData.date}</p>
-                  <p>Hijri: {prayerData.hijriDate}</p>
+                  <p>{t('prayer.gregorianDate')}: {prayerData.date}</p>
+                  <p>{t('prayer.hijriDate')}: {prayerData.hijriDate}</p>
                 </div>
               </CardContent>
             </Card>
@@ -233,36 +237,36 @@ export default function PrayerTimesPage() {
             {nextPrayer && (
               <Card className="bg-primary/10 backdrop-blur-md border-primary">
                 <CardContent className="p-6 text-center">
-                  <p className="text-sm text-muted-foreground mb-2">Next Prayer</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t('prayer.nextPrayer')}</p>
                   <p className="text-3xl font-bold text-primary mb-1">{nextPrayer.name}</p>
-                  <p className="text-lg text-primary/80">in {nextPrayer.timeUntil}</p>
-                  <p className="text-sm text-muted-foreground mt-2">at {nextPrayer.time}</p>
+                  <p className="text-lg text-primary/80">{nextPrayer.timeUntil}</p>
+                  <p className="text-sm text-muted-foreground mt-2">{nextPrayer.time}</p>
                 </CardContent>
               </Card>
             )}
 
             {/* Prayer Times Grid */}
             <div className="grid gap-3">
-              <PrayerCard name="Fajr" time={prayerData.times.Fajr} isNext={nextPrayer?.name === 'Fajr'} />
-              <PrayerCard name="Sunrise" time={prayerData.times.Sunrise} isNext={nextPrayer?.name === 'Sunrise'} />
-              <PrayerCard name="Dhuhr" time={prayerData.times.Dhuhr} isNext={nextPrayer?.name === 'Dhuhr'} />
-              <PrayerCard name="Asr" time={prayerData.times.Asr} isNext={nextPrayer?.name === 'Asr'} />
-              <PrayerCard name="Maghrib" time={prayerData.times.Maghrib} isNext={nextPrayer?.name === 'Maghrib'} />
-              <PrayerCard name="Isha" time={prayerData.times.Isha} isNext={nextPrayer?.name === 'Isha'} />
+              <PrayerCard name={t('prayer.fajr')} time={prayerData.times.Fajr} isNext={nextPrayer?.name === 'Fajr'} />
+              <PrayerCard name={t('prayer.sunrise')} time={prayerData.times.Sunrise} isNext={nextPrayer?.name === 'Sunrise'} />
+              <PrayerCard name={t('prayer.dhuhr')} time={prayerData.times.Dhuhr} isNext={nextPrayer?.name === 'Dhuhr'} />
+              <PrayerCard name={t('prayer.asr')} time={prayerData.times.Asr} isNext={nextPrayer?.name === 'Asr'} />
+              <PrayerCard name={t('prayer.maghrib')} time={prayerData.times.Maghrib} isNext={nextPrayer?.name === 'Maghrib'} />
+              <PrayerCard name={t('prayer.isha')} time={prayerData.times.Isha} isNext={nextPrayer?.name === 'Isha'} />
             </div>
 
             {/* Additional Times */}
             <Card className="bg-muted/30 backdrop-blur-md border-dashed">
               <CardHeader>
-                <CardTitle className="text-sm font-medium">Additional Times</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('prayer.additionalTimes')}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0 grid grid-cols-2 gap-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Imsak</span>
+                  <span className="text-muted-foreground">{t('prayer.imsak')}</span>
                   <span className="font-medium">{prayerData.times.Imsak}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Midnight</span>
+                  <span className="text-muted-foreground">{t('prayer.midnight')}</span>
                   <span className="font-medium">{prayerData.times.Midnight}</span>
                 </div>
               </CardContent>

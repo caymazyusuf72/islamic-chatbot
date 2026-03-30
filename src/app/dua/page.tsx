@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoaderCircle, BookHeart, Send, Sparkles, Copy, Volume2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/language-context';
+import { getTranslation } from '@/lib/i18n';
 
 const initialState = {
   recommendations: null,
@@ -20,6 +22,8 @@ export default function DuaPage() {
   const [pending, setPending] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
+  const { language } = useLanguage();
+  const t = (key: string) => getTranslation(key, language);
   
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,13 +35,13 @@ export default function DuaPage() {
     try {
       await navigator.clipboard.writeText(text);
       toast({
-        title: 'Copied',
-        description: 'Dua copied to clipboard.',
+        title: t('common.success'),
+        description: t('dua.getCopied'),
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to copy dua.',
+        title: t('common.error'),
+        description: t('dua.failedToCopy'),
         variant: 'destructive',
       });
     }
@@ -54,7 +58,7 @@ export default function DuaPage() {
     <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
       <header className="p-4 border-b flex items-center gap-2">
         <BookHeart className="text-primary" />
-        <h1 className="text-xl font-headline font-bold tracking-wider">Dua Recommendations</h1>
+        <h1 className="text-xl font-headline font-bold tracking-wider">{t('dua.title')}</h1>
       </header>
 
       <div className="flex-1 flex flex-col p-4 gap-4">
@@ -63,18 +67,18 @@ export default function DuaPage() {
             <form ref={formRef} onSubmit={handleFormSubmit} className="flex items-center gap-4">
               <Input
                 name="situation"
-                placeholder="Describe a situation, e.g., 'for an exam' or 'when feeling anxious'"
+                placeholder={t('dua.placeholder')}
                 className="flex-1 bg-input"
                 disabled={pending}
                 required
               />
               <Button type="submit" size="icon" disabled={pending}>
                 {pending ? <LoaderCircle className="animate-spin" /> : <Send />}
-                <span className="sr-only">Get Recommendations</span>
+                <span className="sr-only">{t('dua.getRecommendations')}</span>
               </Button>
             </form>
              <p className="text-xs text-muted-foreground text-center mt-2">
-              Get dua recommendations for any situation you are facing.
+              {t('dua.description')}
             </p>
           </CardContent>
         </Card>
@@ -84,13 +88,13 @@ export default function DuaPage() {
             {pending && (
               <div className="flex items-center justify-center p-8 text-muted-foreground gap-2 animate-fade-in">
                 <LoaderCircle className="animate-spin w-5 h-5" />
-                <span>Finding the best duas for you...</span>
+                <span>{t('dua.findingBestDuas')}</span>
               </div>
             )}
             {state.error && <p className="text-destructive text-center">{state.error}</p>}
             {state.recommendations && (
               <div className="space-y-4 animate-slide-in">
-                <h2 className="flex items-center gap-2 font-headline text-2xl text-primary"><Sparkles className="w-5 h-5" /> Here are some recommendations:</h2>
+                <h2 className="flex items-center gap-2 font-headline text-2xl text-primary"><Sparkles className="w-5 h-5" /> {t('dua.hereAreRecommendations')}</h2>
                 {state.recommendations.map((dua, index) => (
                   <Card key={index} className="bg-card/60 backdrop-blur-md border transition-smooth hover:shadow-lg">
                     <CardContent className="p-4">
