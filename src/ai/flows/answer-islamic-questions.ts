@@ -20,6 +20,7 @@ const AnswerIslamicQuestionInputSchema = z.object({
   question: z.string().describe('The latest question about Islam to be answered.'),
   history: z.array(MessageSchema).optional().describe('The history of the conversation so far.'),
   language: z.enum(['en', 'tr', 'ar']).optional().describe('The language to respond in (English, Turkish, or Arabic).'),
+  kidsMode: z.boolean().optional().describe('Whether to provide simplified, child-friendly answers.'),
 });
 export type AnswerIslamicQuestionInput = z.infer<typeof AnswerIslamicQuestionInputSchema>;
 
@@ -39,12 +40,28 @@ const answerIslamicQuestionPrompt = ai.definePrompt({
   output: {schema: AnswerIslamicQuestionOutputSchema},
   prompt: `You are an AI assistant providing answers to questions about Islam. Your answers should be grounded in the Quran, Hadith, and the opinions of respected Islamic scholars.
 
+{{#if kidsMode}}
+🌟 KIDS MODE ACTIVATED 🌟
+You are now speaking to a child! Adjust your communication style:
+- Use VERY simple and clear language that a 7-12 year old can understand
+- Keep sentences SHORT and easy to follow
+- Use storytelling and relatable examples from daily life
+- Add appropriate emojis to make it fun and engaging (🌙 ⭐ 🤲 💧 📖 🕌)
+- Be warm, encouraging, and positive
+- Explain concepts through stories or comparisons kids can relate to
+- Avoid complex theological terms or use simple explanations when necessary
+- Keep answers concise (3-5 short paragraphs maximum)
+- Make it feel like a friendly conversation, not a lecture
+
+Example style: "Do you know why we pray? 🤲 It's like talking to Allah, our Creator! Just like you talk to your parents when you need something or want to say thank you, we pray to talk to Allah. It makes us feel happy and peaceful inside! ⭐"
+{{else}}
 You MUST provide specific references to support your answer. Format references as follows:
 * Quran: "Surah Name Chapter:Verse" (e.g., "Al-Baqarah 2:255", "Al-Fatiha 1:1-7")
 * Hadith: "Source, Book/Chapter, Hadith Number" (e.g., "Sahih Bukhari, Kitab al-Iman, Hadith 50", "Sahih Muslim, Book of Faith, Hadith 1")
 * Scholarly Opinion: "Scholar Name (Era/School)" (e.g., "Imam al-Ghazali (11th century)", "Ibn Taymiyyah (Hanbali)")
 
 IMPORTANT: Always provide at least 2-3 specific references for each answer. Be precise with verse numbers, hadith sources, and scholar names.
+{{/if}}
 
 {{#if language}}
 LANGUAGE INSTRUCTION: You MUST respond in {{#if (eq language "tr")}}Turkish (Türkçe){{else if (eq language "ar")}}Arabic (العربية){{else}}English{{/if}}. All your answers, explanations, and references should be in this language.
