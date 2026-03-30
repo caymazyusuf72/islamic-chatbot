@@ -4,17 +4,17 @@ import { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Star, Moon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  toHijri, 
-  getHijriMonths, 
-  getSpecialIslamicDates, 
-  type HijriDate, 
-  formatHijriDate 
+import {
+  toHijri,
+  getHijriMonths,
+  getSpecialIslamicDates,
+  type HijriDateInterface,
+  formatHijriDate
 } from '@/lib/hijri-calendar';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<HijriDate | null>(null);
+  const [selectedDate, setSelectedDate] = useState<HijriDateInterface | null>(null);
 
   const hijriDate = toHijri(currentDate);
   const specialDates = getSpecialIslamicDates(hijriDate.year);
@@ -41,7 +41,7 @@ export default function CalendarPage() {
   };
 
   const handleDateClick = (day: number) => {
-    const date: HijriDate = {
+    const date: HijriDateInterface = {
       day,
       month: hijriDate.month,
       year: hijriDate.year,

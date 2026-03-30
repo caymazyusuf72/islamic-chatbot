@@ -3,7 +3,9 @@
  * Provides conversion between Gregorian and Hijri dates
  */
 
-export interface HijriDate {
+import HijriDate from 'hijri-date';
+
+export interface HijriDateInterface {
   day: number;
   month: number;
   year: number;
@@ -33,59 +35,21 @@ const HIJRI_MONTHS: Array<{ number: number; name: string; nameArabic: string; da
   { number: 12, name: 'Dhu al-Hijjah', nameArabic: 'ذو الحجة', days: 30 },
 ];
 
-const ISLAMIC_EPOCH = 227014; // Julian day number for 1 Muharram 1 AH
-const GREGORIAN_EPOCH = 1721425.5; // Julian day number for 1 January 1 AD
-
-/**
- * Convert Gregorian date to Julian day number
- */
-function gregorianToJulian(year: number, month: number, day: number): number {
-  return (
-    GREGORIAN_EPOCH -
-    1 +
-    Math.floor(365.25 * (year + 4716)) +
-    Math.floor(30.6001 * (month + 1)) +
-    day -
-    Math.floor(49 * year) -
-    Math.floor(month / 3) +
-    Math.floor(3 * year) +
-    Math.floor(month / 3)
-  );
-}
-
-/**
- * Convert Julian day number to Hijri date
- */
-function julianToHijri(jd: number): HijriDate {
-  const l = jd - ISLAMIC_EPOCH;
-  const n = Math.floor(l / 30);
-  const i = Math.floor((l - 30 * n) / 29.5);
-  
-  let year = Math.floor(i / 12) + 1 + n * 30;
-  let month = (i % 12) + 1;
-  const day = Math.floor(l - 30 * n - Math.floor(29.5 * (i % 12)) + 1);
-  
-  const monthInfo = HIJRI_MONTHS[month - 1];
-  
-  return {
-    day,
-    month,
-    year,
-    monthName: monthInfo.name,
-    monthNameArabic: monthInfo.nameArabic,
-  };
-}
-
 /**
  * Convert Gregorian date to Hijri date
  */
-export function toHijri(gregorianDate: Date): HijriDate {
-  const year = gregorianDate.getFullYear();
-  const month = gregorianDate.getMonth() + 1;
-  const day = gregorianDate.getDate();
+export function toHijri(gregorianDate: Date): HijriDateInterface {
+  const hijri = new HijriDate(gregorianDate);
+  const month = hijri.getMonth() + 1; // hijri-date uses 0-based months
+  const monthInfo = HIJRI_MONTHS[month - 1];
   
-  const jd = gregorianToJulian(year, month, day);
-  return julianToHijri(jd);
+  return {
+    day: hijri.getDate(),
+    month: month,
+    year: hijri.getFullYear(),
+    monthName: monthInfo.name,
+    monthNameArabic: monthInfo.nameArabic,
+  };
 }
 
 /**
@@ -112,7 +76,7 @@ export function getHijriMonths(): HijriMonth[] {
 /**
  * Format Hijri date
  */
-export function formatHijriDate(hijriDate: HijriDate, format: 'long' | 'short' = 'long'): string {
+export function formatHijriDate(hijriDate: HijriDateInterface, format: 'long' | 'short' = 'long'): string {
   if (format === 'long') {
     return `${hijriDate.day} ${hijriDate.monthName} ${hijriDate.year} AH`;
   }
@@ -139,7 +103,7 @@ export function isValidHijriDate(day: number, month: number, year: number): bool
 /**
  * Get special Islamic dates for a year
  */
-export function getSpecialIslamicDates(hijriYear: number): Array<{ name: string; date: HijriDate; description: string }> {
+export function getSpecialIslamicDates(hijriYear: number): Array<{ name: string; date: HijriDateInterface; description: string }> {
   return [
     {
       name: 'Islamic New Year',
