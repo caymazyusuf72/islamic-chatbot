@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { duaAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ const initialState: {
 };
 
 export default function DuaPage() {
-  const [state, formAction] = useFormState(duaAction, initialState);
+  const [state, formAction] = useActionState(duaAction, initialState);
   const [pending, setPending] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
