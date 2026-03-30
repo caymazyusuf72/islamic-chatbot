@@ -5,7 +5,7 @@ import { answerAction } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw, BookOpen } from 'lucide-react';
+import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw, BookOpen, Baby } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
@@ -22,6 +22,7 @@ type Message = {
 };
 
 const STORAGE_KEY = 'nurai-chat-history';
+const KIDS_MODE_KEY = 'nurai-kids-mode';
 
 function TTSButton({ text }: { text: string }) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -85,6 +86,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [pending, setPending] = useState(false);
   const [retrying, setRetrying] = useState(false);
+  const [kidsMode, setKidsMode] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export default function Home() {
   const { language } = useLanguage();
   const t = (key: string) => getTranslation(key, language);
 
-  // Load chat history from localStorage on mount
+  // Load chat history and kids mode from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -101,6 +103,11 @@ export default function Home() {
       } catch (e) {
         console.error('Failed to load chat history:', e);
       }
+    }
+    
+    const savedKidsMode = localStorage.getItem(KIDS_MODE_KEY);
+    if (savedKidsMode) {
+      setKidsMode(savedKidsMode === 'true');
     }
   }, []);
 
@@ -112,6 +119,19 @@ export default function Home() {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, [messages]);
+
+  // Save kids mode to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(KIDS_MODE_KEY, kidsMode.toString());
+  }, [kidsMode]);
+
+  const toggleKidsMode = () => {
+    setKidsMode(prev => !prev);
+    toast({
+      title: t('common.success'),
+      description: kidsMode ? t('kidsMode.disabled') : t('kidsMode.enabled'),
+    });
+  };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -132,7 +152,7 @@ export default function Home() {
     setError(null);
     formRef.current?.reset();
 
-    const result = await answerAction([...messages, newMessage], language);
+    const result = await answerAction([...messages, newMessage], language, kidsMode);
 
     if (result.response) {
       const responseMessage: Message = {
@@ -153,7 +173,7 @@ export default function Home() {
     setRetrying(true);
     const messagesToRetry = messages.slice(0, messageIndex);
     
-    const result = await answerAction(messagesToRetry, language);
+    const result = await answerAction(messagesToRetry, language, kidsMode);
     
     if (result.response) {
       const responseMessage: Message = {

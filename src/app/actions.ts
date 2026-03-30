@@ -20,7 +20,8 @@ type AnswerState = {
 
 export async function answerAction(
   messages: Message[],
-  language?: 'en' | 'tr' | 'ar'
+  language?: 'en' | 'tr' | 'ar',
+  kidsMode?: boolean
 ): Promise<AnswerState> {
   const currentQuestion = messages[messages.length - 1]?.content;
 
@@ -38,7 +39,8 @@ export async function answerAction(
     const result = await answerIslamicQuestion({
       question: currentQuestion,
       history,
-      language: language || 'en'
+      language: language || 'en',
+      kidsMode: kidsMode || false
     });
     return {
       response: {

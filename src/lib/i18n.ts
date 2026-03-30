@@ -166,6 +166,17 @@ export const translations: Translations = {
     'chat.exportedSuccessfully': 'Sohbet başarıyla dışa aktarıldı.',
     'chat.responseRegenerated': 'Cevap başarıyla yeniden oluşturuldu.',
     
+    // Kids Mode
+    'kidsMode.title': 'Çocuk Modu',
+    'kidsMode.enabled': 'Çocuk Modu AÇIK 🌟',
+    'kidsMode.disabled': 'Çocuk Modu KAPALI',
+    'kidsMode.description': 'Çocuklar için basit ve eğlenceli cevaplar',
+    'kidsMode.exampleQuestion1': 'Namaz nedir? 🤲',
+    'kidsMode.exampleQuestion2': 'Abdest nasıl alınır? 💧',
+    'kidsMode.exampleQuestion3': 'Neden oruç tutarız? 🌙',
+    'kidsMode.exampleQuestion4': 'Hz. Muhammed kimdir? ☪️',
+    'kidsMode.tryExample': 'Örnek bir soru dene:',
+    
     // Dua
     'dua.title': 'Dua Tavsiyeleri',
     'dua.placeholder': 'Bir durum açıklayın, örn., "sınav için" veya "kaygılıyken"',
@@ -280,6 +291,17 @@ export const translations: Translations = {
     'chat.chatCleared': 'تم مسح سجل المحادثة.',
     'chat.exportedSuccessfully': 'تم تصدير المحادثة بنجاح.',
     'chat.responseRegenerated': 'تم إعادة إنشاء الرد بنجاح.',
+    
+    // Kids Mode
+    'kidsMode.title': 'وضع الأطفال',
+    'kidsMode.enabled': 'وضع الأطفال مفعّل 🌟',
+    'kidsMode.disabled': 'وضع الأطفال معطّل',
+    'kidsMode.description': 'إجابات بسيطة وممتعة للأطفال',
+    'kidsMode.exampleQuestion1': 'ما هي الصلاة؟ 🤲',
+    'kidsMode.exampleQuestion2': 'كيف أتوضأ؟ 💧',
+    'kidsMode.exampleQuestion3': 'لماذا نصوم؟ 🌙',
+    'kidsMode.exampleQuestion4': 'من هو النبي محمد؟ ☪️',
+    'kidsMode.tryExample': 'جرب سؤالاً مثالياً:',
     
     // Dua
     'dua.title': 'توصيات الأدعية',
