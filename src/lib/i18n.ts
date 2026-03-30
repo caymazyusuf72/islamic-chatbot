@@ -3,7 +3,7 @@
  * Supports English and Turkish languages
  */
 
-export type Language = 'en' | 'tr';
+export type Language = 'en' | 'tr' | 'ar';
 
 export type Translations = {
   [key in Language]: {
@@ -240,6 +240,121 @@ export const translations: Translations = {
     'weekDays.thu': 'Per',
     'weekDays.fri': 'Cum',
     'weekDays.sat': 'Cmt',
+  },
+  
+  ar: {
+    // Common
+    'common.loading': 'جاري التحميل...',
+    'common.error': 'خطأ',
+    'common.success': 'نجح',
+    'common.retry': 'إعادة المحاولة',
+    'common.copy': 'نسخ',
+    'common.delete': 'حذف',
+    'common.export': 'تصدير',
+    'common.clear': 'مسح',
+    'common.close': 'إغلاق',
+    'common.cancel': 'إلغاء',
+    'common.save': 'حفظ',
+    'common.search': 'بحث',
+    
+    // Navigation
+    'nav.aiAnswers': 'إجابات بالذكاء الاصطناعي',
+    'nav.duaRecommendations': 'توصيات الأدعية',
+    'nav.prayerTimes': 'أوقات الصلاة',
+    'nav.hijriCalendar': 'التقويم الهجري',
+    'nav.settings': 'الإعدادات',
+    'nav.language': 'اللغة',
+    
+    // Chat
+    'chat.greeting': 'السلام عليكم!',
+    'chat.howCanIHelp': 'كيف يمكنني مساعدتك اليوم؟',
+    'chat.askAboutIslam': 'اسألني أي شيء عن الإسلام، بناءً على القرآن والحديث والعلماء.',
+    'chat.askQuestion': 'اطرح سؤالاً...',
+    'chat.thinking': 'جاري التفكير...',
+    'chat.references': 'المراجع',
+    'chat.send': 'إرسال',
+    'chat.shiftForNewLine': 'Shift + Enter لسطر جديد.',
+    'chat.copiedToClipboard': 'تم نسخ النص إلى الحافظة.',
+    'chat.failedToCopy': 'فشل نسخ النص.',
+    'chat.messageDeleted': 'تم حذف الرسالة.',
+    'chat.chatCleared': 'تم مسح سجل المحادثة.',
+    'chat.exportedSuccessfully': 'تم تصدير المحادثة بنجاح.',
+    'chat.responseRegenerated': 'تم إعادة إنشاء الرد بنجاح.',
+    
+    // Dua
+    'dua.title': 'توصيات الأدعية',
+    'dua.placeholder': 'صف موقفاً، مثل "للامتحان" أو "عند الشعور بالقلق"',
+    'dua.description': 'احصل على توصيات الأدعية لأي موقف تواجهه.',
+    'dua.findingBestDuas': 'جاري البحث عن أفضل الأدعية لك...',
+    'dua.hereAreRecommendations': 'إليك بعض التوصيات:',
+    'dua.getCopied': 'تم نسخ الدعاء إلى الحافظة.',
+    'dua.failedToCopy': 'فشل نسخ الدعاء.',
+    'dua.getRecommendations': 'احصل على التوصيات',
+    
+    // Prayer Times
+    'prayer.title': 'أوقات الصلاة',
+    'prayer.fajr': 'الفجر',
+    'prayer.sunrise': 'الشروق',
+    'prayer.dhuhr': 'الظهر',
+    'prayer.asr': 'العصر',
+    'prayer.maghrib': 'المغرب',
+    'prayer.isha': 'العشاء',
+    'prayer.imsak': 'الإمساك',
+    'prayer.midnight': 'منتصف الليل',
+    'prayer.nextPrayer': 'الصلاة التالية',
+    'prayer.location': 'الموقع',
+    'prayer.gregorianDate': 'ميلادي',
+    'prayer.hijriDate': 'هجري',
+    'prayer.additionalTimes': 'أوقات إضافية',
+    'prayer.refresh': 'تحديث',
+    'prayer.locationAccessDenied': 'تم رفض الوصول إلى الموقع. يرجى تمكين خدمات الموقع.',
+    'prayer.failedToFetch': 'فشل في جلب أوقات الصلاة.',
+    'prayer.tryAgain': 'حاول مرة أخرى',
+    'prayer.fetchingPrayerTimes': 'جاري جلب أوقات الصلاة...',
+    
+    // Calendar
+    'calendar.title': 'التقويم الهجري',
+    'calendar.todayHijriDate': 'التاريخ الهجري اليوم',
+    'calendar.previousMonth': 'الشهر السابق',
+    'calendar.nextMonth': 'الشهر التالي',
+    'calendar.today': 'اليوم',
+    'calendar.allMonths': 'جميع الأشهر',
+    'calendar.specialDates': 'التواريخ الخاصة',
+    'calendar.year': 'السنة',
+    'calendar.selectedDate': 'التاريخ المحدد',
+    
+    // Months
+    'months.muharram': 'محرم',
+    'months.safar': 'صفر',
+    'months.rabiAlAwwal': 'ربيع الأول',
+    'months.rabiAlThani': 'ربيع الثاني',
+    'months.jumadaAlAwwal': 'جمادى الأولى',
+    'months.jumadaAlThani': 'جمادى الثانية',
+    'months.rajab': 'رجب',
+    'months.shaaban': 'شعبان',
+    'months.ramadan': 'رمضان',
+    'months.shawwal': 'شوال',
+    'months.dhuAlQadah': 'ذو القعدة',
+    'months.dhuAlHijjah': 'ذو الحجة',
+    
+    // Special Islamic Dates
+    'specialDates.islamicNewYear': 'رأس السنة الهجرية',
+    'specialDates.ashura': 'يوم عاشوراء',
+    'specialDates.mawlidAlNabi': 'المولد النبوي',
+    'specialDates.israAndMiraj': 'الإسراء والمعراج',
+    'specialDates.laylatAlQadr': 'ليلة القدر',
+    'specialDates.eidAlFitr': 'عيد الفطر',
+    'specialDates.dayOfArafah': 'يوم عرفة',
+    'specialDates.eidAlAdha': 'عيد الأضحى',
+    
+    // Week Days
+    'weekDays.sun': 'الأحد',
+    'weekDays.mon': 'الإثنين',
+    'weekDays.tue': 'الثلاثاء',
+    'weekDays.wed': 'الأربعاء',
+    'weekDays.thu': 'الخميس',
+    'weekDays.fri': 'الجمعة',
+    'weekDays.sat': 'السبت',
   },
 };
 

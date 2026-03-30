@@ -19,6 +19,7 @@ interface LanguageSwitcherProps {
 const languages: Array<{ code: Language; name: string; flag: string }> = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
 export function LanguageSwitcher({ currentLanguage, onLanguageChange }: LanguageSwitcherProps) {
