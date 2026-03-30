@@ -11,10 +11,14 @@ import {
   type HijriDateInterface,
   formatHijriDate
 } from '@/lib/hijri-calendar';
+import { useLanguage } from '@/contexts/language-context';
+import { getTranslation } from '@/lib/i18n';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<HijriDateInterface | null>(null);
+  const { language } = useLanguage();
+  const t = (key: string) => getTranslation(key, language);
 
   const hijriDate = toHijri(currentDate);
   const specialDates = getSpecialIslamicDates(hijriDate.year);
@@ -68,13 +72,21 @@ export default function CalendarPage() {
     return day === today.day && hijriDate.month === today.month;
   };
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = [
+    t('weekDays.sun'),
+    t('weekDays.mon'),
+    t('weekDays.tue'),
+    t('weekDays.wed'),
+    t('weekDays.thu'),
+    t('weekDays.fri'),
+    t('weekDays.sat')
+  ];
 
   return (
     <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
       <header className="p-4 border-b flex items-center gap-2">
         <CalendarIcon className="text-primary" />
-        <h1 className="text-xl font-headline font-bold tracking-wider">Hijri Calendar</h1>
+        <h1 className="text-xl font-headline font-bold tracking-wider">{t('calendar.title')}</h1>
       </header>
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -84,7 +96,7 @@ export default function CalendarPage() {
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Moon className="w-5 h-5 text-primary" />
-                <p className="text-sm text-muted-foreground">Today's Hijri Date</p>
+                <p className="text-sm text-muted-foreground">{t('calendar.todayHijriDate')}</p>
               </div>
               <p className="text-3xl font-bold text-primary mb-2">
                 {hijriDate.day} {hijriDate.monthNameArabic}
@@ -168,7 +180,7 @@ export default function CalendarPage() {
 
               <div className="flex justify-center mt-4">
                 <Button onClick={handleToday} variant="outline" size="sm">
-                  Today
+                  {t('calendar.today')}
                 </Button>
               </div>
             </CardContent>
@@ -179,7 +191,7 @@ export default function CalendarPage() {
             <Card className="bg-card/80 backdrop-blur-md border">
               <CardHeader>
                 <CardTitle className="font-headline text-xl">
-                  {selectedDate.day} {selectedDate.monthName} {selectedDate.year}
+                  {t('calendar.selectedDate')}: {selectedDate.day} {selectedDate.monthName} {selectedDate.year}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -195,7 +207,7 @@ export default function CalendarPage() {
             <CardHeader>
               <CardTitle className="font-headline text-xl flex items-center gap-2">
                 <Star className="w-5 h-5 text-primary" />
-                Special Dates {hijriDate.year} AH
+                {t('calendar.specialDates')} {hijriDate.year} AH
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -224,7 +236,7 @@ export default function CalendarPage() {
           {/* Month List */}
           <Card className="bg-card/80 backdrop-blur-md border">
             <CardHeader>
-              <CardTitle className="font-headline text-xl">All Months</CardTitle>
+              <CardTitle className="font-headline text-xl">{t('calendar.allMonths')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">

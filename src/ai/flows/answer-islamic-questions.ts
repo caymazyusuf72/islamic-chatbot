@@ -19,6 +19,7 @@ const MessageSchema = z.object({
 const AnswerIslamicQuestionInputSchema = z.object({
   question: z.string().describe('The latest question about Islam to be answered.'),
   history: z.array(MessageSchema).optional().describe('The history of the conversation so far.'),
+  language: z.enum(['en', 'tr', 'ar']).optional().describe('The language to respond in (English, Turkish, or Arabic).'),
 });
 export type AnswerIslamicQuestionInput = z.infer<typeof AnswerIslamicQuestionInputSchema>;
 
@@ -44,6 +45,10 @@ You MUST provide specific references to support your answer. Format references a
 * Scholarly Opinion: "Scholar Name (Era/School)" (e.g., "Imam al-Ghazali (11th century)", "Ibn Taymiyyah (Hanbali)")
 
 IMPORTANT: Always provide at least 2-3 specific references for each answer. Be precise with verse numbers, hadith sources, and scholar names.
+
+{{#if language}}
+LANGUAGE INSTRUCTION: You MUST respond in {{#if (eq language "tr")}}Turkish (Türkçe){{else if (eq language "ar")}}Arabic (العربية){{else}}English{{/if}}. All your answers, explanations, and references should be in this language.
+{{/if}}
 
 Remember the conversation history and use it as context to provide a relevant and coherent answer.
 

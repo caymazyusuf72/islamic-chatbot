@@ -132,7 +132,7 @@ export default function Home() {
     setError(null);
     formRef.current?.reset();
 
-    const result = await answerAction([...messages, newMessage]);
+    const result = await answerAction([...messages, newMessage], language);
 
     if (result.response) {
       const responseMessage: Message = {
@@ -153,7 +153,7 @@ export default function Home() {
     setRetrying(true);
     const messagesToRetry = messages.slice(0, messageIndex);
     
-    const result = await answerAction(messagesToRetry);
+    const result = await answerAction(messagesToRetry, language);
     
     if (result.response) {
       const responseMessage: Message = {

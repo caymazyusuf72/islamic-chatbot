@@ -19,7 +19,8 @@ type AnswerState = {
 };
 
 export async function answerAction(
-  messages: Message[]
+  messages: Message[],
+  language?: 'en' | 'tr' | 'ar'
 ): Promise<AnswerState> {
   const currentQuestion = messages[messages.length - 1]?.content;
 
@@ -34,7 +35,11 @@ export async function answerAction(
   }));
   
   try {
-    const result = await answerIslamicQuestion({ question: currentQuestion, history });
+    const result = await answerIslamicQuestion({
+      question: currentQuestion,
+      history,
+      language: language || 'en'
+    });
     return {
       response: {
         role: 'assistant',
