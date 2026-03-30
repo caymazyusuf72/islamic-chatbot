@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
+import { DuaCardSkeleton, ErrorDisplay } from '@/components/loading-skeletons';
 
 type Dua = {
   title: string;
@@ -69,29 +70,36 @@ export default function DuaPage() {
   }, [state]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
-      <header className="p-4 border-b flex items-center gap-2">
-        <BookHeart className="text-primary" />
-        <h1 className="text-xl font-headline font-bold tracking-wider">{t('dua.title')}</h1>
+    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm page-enter">
+      <header className="p-4 border-b flex items-center gap-2" role="banner">
+        <BookHeart className="text-primary" aria-hidden="true" />
+        <h1 className="text-lg sm:text-xl font-headline font-bold tracking-wider">{t('dua.title')}</h1>
       </header>
 
-      <div className="flex-1 flex flex-col p-4 gap-4">
-        <Card className="bg-card/80 backdrop-blur-md border">
-          <CardContent className="p-6">
-            <form ref={formRef} onSubmit={handleFormSubmit} className="flex items-center gap-4">
+      <div className="flex-1 flex flex-col p-4 gap-4" role="main">
+        <Card className="bg-card/80 backdrop-blur-md border hover-lift">
+          <CardContent className="p-4 sm:p-6">
+            <form ref={formRef} onSubmit={handleFormSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <Input
                 name="situation"
                 placeholder={t('dua.placeholder')}
-                className="flex-1 bg-input"
+                className="flex-1 bg-input focus-ring"
                 disabled={pending}
                 required
+                aria-label={t('dua.placeholder')}
               />
-              <Button type="submit" size="icon" disabled={pending}>
-                {pending ? <LoaderCircle className="animate-spin" /> : <Send />}
+              <Button
+                type="submit"
+                size="icon"
+                disabled={pending}
+                className="focus-ring w-full sm:w-auto"
+                aria-label={t('dua.getRecommendations')}
+              >
+                {pending ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Send aria-hidden="true" />}
                 <span className="sr-only">{t('dua.getRecommendations')}</span>
               </Button>
             </form>
-             <p className="text-xs text-muted-foreground text-center mt-2">
+             <p className="text-xs sm:text-sm text-muted-foreground text-center mt-3">
               {t('dua.description')}
             </p>
           </CardContent>
@@ -100,32 +108,46 @@ export default function DuaPage() {
         <ScrollArea className="flex-1">
           <div className="max-w-4xl mx-auto">
             {pending && (
-              <div className="flex items-center justify-center p-8 text-muted-foreground gap-2 animate-fade-in">
-                <LoaderCircle className="animate-spin w-5 h-5" />
-                <span>{t('dua.findingBestDuas')}</span>
+              <div className="space-y-4">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <DuaCardSkeleton key={i} />
+                ))}
               </div>
             )}
-            {state.error && <p className="text-destructive text-center">{state.error}</p>}
+            {state.error && (
+              <ErrorDisplay
+                message={state.error}
+                onRetry={() => formRef.current?.requestSubmit()}
+                retryLabel={t('common.tryAgain')}
+              />
+            )}
             {state.recommendations && (
-              <div className="space-y-6 animate-slide-in">
-                <h2 className="flex items-center gap-2 font-headline text-2xl text-primary">
-                  <Sparkles className="w-5 h-5" /> {t('dua.hereAreRecommendations')}
+              <div className="space-y-4 sm:space-y-6 animate-slide-in">
+                <h2 className="flex items-center gap-2 font-headline text-xl sm:text-2xl text-primary">
+                  <Sparkles className="w-5 h-5" aria-hidden="true" /> {t('dua.hereAreRecommendations')}
                 </h2>
                 {state.recommendations.map((dua, index) => (
-                  <Card key={index} className="bg-card/60 backdrop-blur-md border transition-smooth hover:shadow-lg">
+                  <Card
+                    key={index}
+                    className="bg-card/60 backdrop-blur-md border transition-smooth hover-lift"
+                    role="article"
+                    aria-label={`Dua recommendation: ${dua.title}`}
+                  >
                     <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center gap-2 text-lg">
-                        <BookHeart className="w-5 h-5 text-primary" />
+                      <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                        <BookHeart className="w-5 h-5 text-primary" aria-hidden="true" />
                         {dua.title}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       {/* Arabic Text - RTL */}
-                      <div className="bg-muted/30 p-4 rounded-lg">
+                      <div className="bg-muted/30 p-3 sm:p-4 rounded-lg">
                         <p
-                          className="text-2xl leading-loose text-right font-arabic"
+                          className="text-xl sm:text-2xl leading-loose text-right font-arabic"
                           dir="rtl"
                           lang="ar"
+                          role="text"
+                          aria-label="Arabic text of the dua"
                         >
                           {dua.arabicText}
                         </p>
@@ -136,7 +158,7 @@ export default function DuaPage() {
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                           {t('dua.transliteration')}
                         </p>
-                        <p className="text-base italic text-foreground/90 leading-relaxed">
+                        <p className="text-sm sm:text-base italic text-foreground/90 leading-relaxed">
                           {dua.transliteration}
                         </p>
                       </div>
@@ -146,19 +168,19 @@ export default function DuaPage() {
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                           {t('dua.meaning')}
                         </p>
-                        <p className="text-base text-foreground/90 leading-relaxed">
+                        <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
                           {dua.meaning}
                         </p>
                       </div>
 
                       {/* Source */}
-                      <div className="flex items-start gap-2 bg-primary/5 p-3 rounded-lg">
-                        <BookOpen className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-2 bg-primary/5 p-3 rounded-lg hover:bg-primary/10 transition-colors">
+                        <BookOpen className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" aria-hidden="true" />
                         <div className="space-y-1 flex-1">
                           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                             {t('dua.source')}
                           </p>
-                          <p className="text-sm text-foreground/90">
+                          <p className="text-xs sm:text-sm text-foreground/90">
                             {dua.source}
                           </p>
                         </div>
@@ -169,7 +191,7 @@ export default function DuaPage() {
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                           {t('dua.whenToRecite')}
                         </p>
-                        <p className="text-sm text-foreground/80">
+                        <p className="text-xs sm:text-sm text-foreground/80">
                           {dua.whenToRecite}
                         </p>
                       </div>
@@ -179,10 +201,11 @@ export default function DuaPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="w-full"
+                          className="w-full focus-ring hover-scale"
                           onClick={() => handleCopy(`${dua.arabicText}\n\n${dua.transliteration}\n\n${dua.meaning}\n\n${t('dua.source')}: ${dua.source}`)}
+                          aria-label={`Copy ${dua.title} to clipboard`}
                         >
-                          <Copy className="w-4 h-4 mr-2" />
+                          <Copy className="w-4 h-4 mr-2" aria-hidden="true" />
                           {t('dua.copyDua')}
                         </Button>
                       </div>

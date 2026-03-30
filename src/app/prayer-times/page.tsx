@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { getPrayerTimes, getPrayerTimesByCity, getUserLocation, getNextPrayer, type PrayerTimesData, type PrayerTimes } from '@/lib/prayer-times';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
+import { PrayerTimesPageSkeleton, ErrorDisplay } from '@/components/loading-skeletons';
 
 export default function PrayerTimesPage() {
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
@@ -103,69 +104,80 @@ export default function PrayerTimesPage() {
   const nextPrayer = prayerData ? getNextPrayer(prayerData.times) : null;
 
   const PrayerCard = ({ name, time, isNext = false }: { name: string; time: string; isNext?: boolean }) => (
-    <Card className={`bg-card/80 backdrop-blur-md border ${isNext ? 'border-primary ring-2 ring-primary/20' : ''}`}>
-      <CardContent className="p-4 flex items-center justify-between">
+    <Card
+      className={`bg-card/80 backdrop-blur-md border transition-smooth hover-lift ${isNext ? 'border-primary ring-2 ring-primary/20' : ''}`}
+      role="article"
+      aria-label={`${name} prayer time: ${time}${isNext ? ' - Next prayer' : ''}`}
+    >
+      <CardContent className="p-4 sm:p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isNext ? 'bg-primary/20' : 'bg-muted'}`}>
-            {['Fajr', 'Isha'].includes(name) && <Moon className={`w-5 h-5 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
-            {['Sunrise'].includes(name) && <Sun className={`w-5 h-5 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
-            {['Dhuhr', 'Asr', 'Maghrib'].includes(name) && <Clock className={`w-5 h-5 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
+          <div
+            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors ${isNext ? 'bg-primary/20' : 'bg-muted'}`}
+            aria-hidden="true"
+          >
+            {['Fajr', 'Isha'].includes(name) && <Moon className={`w-5 h-5 sm:w-6 sm:h-6 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
+            {['Sunrise'].includes(name) && <Sun className={`w-5 h-5 sm:w-6 sm:h-6 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
+            {['Dhuhr', 'Asr', 'Maghrib'].includes(name) && <Clock className={`w-5 h-5 sm:w-6 sm:h-6 ${isNext ? 'text-primary' : 'text-muted-foreground'}`} />}
           </div>
           <div>
-            <p className="font-medium">{name}</p>
+            <p className="font-medium text-sm sm:text-base">{name}</p>
             {isNext && nextPrayer && (
-              <p className="text-xs text-primary font-medium">{t('prayer.nextPrayer')}: {nextPrayer.timeUntil}</p>
+              <p className="text-xs sm:text-sm text-primary font-medium">{t('prayer.nextPrayer')}: {nextPrayer.timeUntil}</p>
             )}
           </div>
         </div>
-        <p className={`text-lg font-bold ${isNext ? 'text-primary' : 'text-foreground'}`}>{time}</p>
+        <p className={`text-lg sm:text-xl font-bold ${isNext ? 'text-primary' : 'text-foreground'}`}>{time}</p>
       </CardContent>
     </Card>
   );
 
   return (
-    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm">
-      <header className="p-4 border-b flex items-center justify-between">
+    <div className="flex flex-col h-full w-full bg-background/80 backdrop-blur-sm page-enter">
+      <header className="p-4 border-b flex items-center justify-between" role="banner">
         <div className="flex items-center gap-2">
-          <Clock className="text-primary" />
-          <h1 className="text-xl font-headline font-bold tracking-wider">{t('prayer.title')}</h1>
+          <Clock className="text-primary" aria-hidden="true" />
+          <h1 className="text-lg sm:text-xl font-headline font-bold tracking-wider">{t('prayer.title')}</h1>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={loading} title={t('prayer.refresh')}>
-          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleRefresh}
+          disabled={loading}
+          aria-label={t('prayer.refresh')}
+          className="focus-ring"
+        >
+          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
         </Button>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4">
-        {loading && !prayerData && (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <RefreshCw className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-              <p className="text-muted-foreground">{t('prayer.fetchingPrayerTimes')}</p>
-            </div>
-          </div>
-        )}
+      <div className="flex-1 overflow-y-auto p-4" role="main">
+        {loading && !prayerData && <PrayerTimesPageSkeleton />}
 
         {error && (
-          <div className="max-w-md mx-auto space-y-4">
-            <Card className="bg-destructive/10 border-destructive">
-              <CardContent className="p-6 text-center">
-                <p className="text-destructive mb-4">{error}</p>
-                {!showManualInput && (
-                  <div className="flex gap-2 justify-center">
-                    <Button onClick={() => fetchPrayerTimes()}>{t('prayer.tryAgain')}</Button>
-                    <Button variant="outline" onClick={() => setShowManualInput(true)}>
-                      {t('prayer.location')}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <div className="max-w-md mx-auto space-y-4 animate-fade-in">
+            <ErrorDisplay
+              message={error}
+              onRetry={!showManualInput ? () => fetchPrayerTimes() : undefined}
+              retryLabel={t('prayer.tryAgain')}
+            />
+            {!showManualInput && (
+              <div className="flex justify-center">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowManualInput(true)}
+                  className="focus-ring"
+                >
+                  <MapPinned className="w-4 h-4 mr-2" aria-hidden="true" />
+                  {t('prayer.location')}
+                </Button>
+              </div>
+            )}
 
             {showManualInput && (
-              <Card className="bg-card/80 backdrop-blur-md border">
+              <Card className="bg-card/80 backdrop-blur-md border animate-slide-in">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <MapPinned className="w-5 h-5 text-primary" />
+                    <MapPinned className="w-5 h-5 text-primary" aria-hidden="true" />
                     {t('prayer.location')}
                   </CardTitle>
                 </CardHeader>
@@ -180,6 +192,8 @@ export default function PrayerTimesPage() {
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && fetchPrayerTimesByCity()}
+                      className="focus-ring"
+                      aria-required="true"
                     />
                   </div>
                   <div className="space-y-2">
@@ -192,21 +206,24 @@ export default function PrayerTimesPage() {
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && fetchPrayerTimesByCity()}
+                      className="focus-ring"
+                      aria-required="true"
                     />
                   </div>
                   <Button
                     onClick={fetchPrayerTimesByCity}
-                    className="w-full"
+                    className="w-full focus-ring"
                     disabled={manualLoading}
+                    aria-label="Get prayer times for entered location"
                   >
                     {manualLoading ? (
                       <>
-                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" />
                         Loading...
                       </>
                     ) : (
                       <>
-                        <MapPin className="w-4 h-4 mr-2" />
+                        <MapPin className="w-4 h-4 mr-2" aria-hidden="true" />
                         Get Prayer Times
                       </>
                     )}
@@ -218,15 +235,15 @@ export default function PrayerTimesPage() {
         )}
 
         {prayerData && (
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
             {/* Location & Date Info */}
-            <Card className="bg-card/80 backdrop-blur-md border">
-              <CardContent className="p-6">
+            <Card className="bg-card/80 backdrop-blur-md border hover-lift" role="region" aria-label="Location and date information">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  <p className="font-medium">{prayerData.location.city}</p>
+                  <MapPin className="w-5 h-5 text-primary" aria-hidden="true" />
+                  <p className="font-medium text-sm sm:text-base">{prayerData.location.city}</p>
                 </div>
-                <div className="space-y-1 text-sm text-muted-foreground">
+                <div className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                   <p>{t('prayer.gregorianDate')}: {prayerData.date}</p>
                   <p>{t('prayer.hijriDate')}: {prayerData.hijriDate}</p>
                 </div>
@@ -235,18 +252,22 @@ export default function PrayerTimesPage() {
 
             {/* Next Prayer Highlight */}
             {nextPrayer && (
-              <Card className="bg-primary/10 backdrop-blur-md border-primary">
-                <CardContent className="p-6 text-center">
-                  <p className="text-sm text-muted-foreground mb-2">{t('prayer.nextPrayer')}</p>
-                  <p className="text-3xl font-bold text-primary mb-1">{nextPrayer.name}</p>
-                  <p className="text-lg text-primary/80">{nextPrayer.timeUntil}</p>
-                  <p className="text-sm text-muted-foreground mt-2">{nextPrayer.time}</p>
+              <Card
+                className="bg-primary/10 backdrop-blur-md border-primary hover-scale"
+                role="region"
+                aria-label="Next prayer information"
+              >
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-2">{t('prayer.nextPrayer')}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-primary mb-1">{nextPrayer.name}</p>
+                  <p className="text-base sm:text-lg text-primary/80">{nextPrayer.timeUntil}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2">{nextPrayer.time}</p>
                 </CardContent>
               </Card>
             )}
 
             {/* Prayer Times Grid */}
-            <div className="grid gap-3">
+            <div className="grid gap-2 sm:gap-3" role="list" aria-label="Prayer times">
               <PrayerCard name={t('prayer.fajr')} time={prayerData.times.Fajr} isNext={nextPrayer?.name === 'Fajr'} />
               <PrayerCard name={t('prayer.sunrise')} time={prayerData.times.Sunrise} isNext={nextPrayer?.name === 'Sunrise'} />
               <PrayerCard name={t('prayer.dhuhr')} time={prayerData.times.Dhuhr} isNext={nextPrayer?.name === 'Dhuhr'} />
@@ -256,16 +277,16 @@ export default function PrayerTimesPage() {
             </div>
 
             {/* Additional Times */}
-            <Card className="bg-muted/30 backdrop-blur-md border-dashed">
+            <Card className="bg-muted/30 backdrop-blur-md border-dashed hover-lift" role="region" aria-label="Additional prayer times">
               <CardHeader>
-                <CardTitle className="text-sm font-medium">{t('prayer.additionalTimes')}</CardTitle>
+                <CardTitle className="text-sm sm:text-base font-medium">{t('prayer.additionalTimes')}</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 pt-0 grid grid-cols-2 gap-2 text-sm">
-                <div className="flex justify-between">
+              <CardContent className="p-4 pt-0 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-2 text-xs sm:text-sm">
+                <div className="flex justify-between items-center p-2 rounded bg-background/50">
                   <span className="text-muted-foreground">{t('prayer.imsak')}</span>
                   <span className="font-medium">{prayerData.times.Imsak}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center p-2 rounded bg-background/50">
                   <span className="text-muted-foreground">{t('prayer.midnight')}</span>
                   <span className="font-medium">{prayerData.times.Midnight}</span>
                 </div>
