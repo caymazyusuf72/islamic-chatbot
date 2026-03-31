@@ -7,10 +7,14 @@ import { AppWrapper } from '@/components/app-wrapper';
 import { Toaster } from '@/components/ui/toaster';
 import { Icons } from '@/components/icons';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { ThemePicker } from '@/components/theme-picker';
 import { NavLink } from '@/components/nav-link';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useLanguage } from '@/contexts/language-context';
+import { ThemeProvider } from '@/contexts/theme-context';
 import { FavoritesProvider } from '@/contexts/favorites-context';
+import { IslamicPatternBackground } from '@/components/islamic-pattern-background';
+import { PageTransition } from '@/components/page-transition';
 import { getTranslation } from '@/lib/i18n';
 import { MessageCircle, BookHeart, BookOpen, Clock, Calendar, Compass, GraduationCap } from 'lucide-react';
 
@@ -24,14 +28,21 @@ export default function RootLayout({
       <head>
         <title>NurAI - Islamic AI Assistant</title>
         <meta name="description" content="Your AI assistant for Islamic knowledge, guided by the Quran and Sunnah." />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#d4af37" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <AppWrapper>
-          <LayoutContent>{children}</LayoutContent>
-        </AppWrapper>
+        <ThemeProvider>
+          <AppWrapper>
+            <IslamicPatternBackground />
+            <LayoutContent>{children}</LayoutContent>
+          </AppWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
@@ -103,13 +114,16 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                 currentLanguage={language}
                 onLanguageChange={setLanguage}
               />
+              <ThemePicker />
               <ThemeToggle />
             </div>
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
           <main className="h-full w-full">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
         </SidebarInset>
       </SidebarProvider>

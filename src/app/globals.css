@@ -6,6 +6,17 @@ body {
   font-family: 'PT Sans', sans-serif;
 }
 
+/* Smooth Scroll Behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @layer base {
   :root {
     --background: 60 56% 91%;
@@ -61,16 +72,72 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  
+  /* Accent Color Classes */
+  .accent-emerald {
+    --accent-primary: 16 185 129;
+    --accent-hover: 5 150 105;
+    --accent-light: 167 243 208;
+  }
+  
+  .accent-blue {
+    --accent-primary: 59 130 246;
+    --accent-hover: 37 99 235;
+    --accent-light: 191 219 254;
+  }
+  
+  .accent-purple {
+    --accent-primary: 168 85 247;
+    --accent-hover: 147 51 234;
+    --accent-light: 233 213 255;
+  }
+  
+  .accent-rose {
+    --accent-primary: 244 63 94;
+    --accent-hover: 225 29 72;
+    --accent-light: 254 205 211;
+  }
+  
+  .accent-amber {
+    --accent-primary: 245 158 11;
+    --accent-hover: 217 119 6;
+    --accent-light: 253 230 138;
+  }
+  
+  .accent-teal {
+    --accent-primary: 20 184 166;
+    --accent-hover: 13 148 136;
+    --accent-light: 153 246 228;
+  }
 }
  
 @layer base {
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
     background-image: radial-gradient(hsl(var(--muted)) 1px, transparent 1px);
     background-size: 16px 16px;
+  }
+  
+  /* Focus Visible Styles */
+  *:focus-visible {
+    outline: 2px solid rgb(var(--accent-primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  /* Selection Colors */
+  ::selection {
+    background-color: rgb(var(--accent-primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+  
+  ::-moz-selection {
+    background-color: rgb(var(--accent-primary) / 0.3);
+    color: hsl(var(--foreground));
   }
 }
 
@@ -359,4 +426,36 @@ blockquote.reference-quote {
   background: hsl(var(--primary) / 0.05);
   border-radius: 0.25rem;
   padding: 0.75rem 1rem;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  @page {
+    margin: 2cm;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
