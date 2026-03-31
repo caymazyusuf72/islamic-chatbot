@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { SplashScreen } from './splash-screen';
 import { LanguageProvider, useLanguage } from '@/contexts/language-context';
+import { ProgressProvider } from '@/contexts/progress-context';
 
 function AppContent({ children }: { children: React.ReactNode }) {
   const [showSplash, setShowSplash] = useState(true);
@@ -45,7 +46,9 @@ function AppContent({ children }: { children: React.ReactNode }) {
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   return (
     <LanguageProvider>
-      <AppContent>{children}</AppContent>
+      <ProgressProvider>
+        <AppContent>{children}</AppContent>
+      </ProgressProvider>
     </LanguageProvider>
   );
 }

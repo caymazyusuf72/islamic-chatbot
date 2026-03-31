@@ -12,7 +12,7 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 import { useLanguage } from '@/contexts/language-context';
 import { FavoritesProvider } from '@/contexts/favorites-context';
 import { getTranslation } from '@/lib/i18n';
-import { MessageCircle, BookHeart, BookOpen, Clock, Calendar } from 'lucide-react';
+import { MessageCircle, BookHeart, BookOpen, Clock, Calendar, Compass, GraduationCap } from 'lucide-react';
 
 export default function RootLayout({
   children,
@@ -81,6 +81,18 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                 <NavLink href="/calendar">
                   <Calendar />
                   <span>{t('nav.hijriCalendar')}</span>
+                </NavLink>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <NavLink href="/qibla">
+                  <Compass />
+                  <span>{t('nav.qibla')}</span>
+                </NavLink>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <NavLink href="/education">
+                  <GraduationCap />
+                  <span>{t('nav.education')}</span>
                 </NavLink>
               </SidebarMenuItem>
             </SidebarMenu>
