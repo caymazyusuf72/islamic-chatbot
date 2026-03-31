@@ -30,6 +30,7 @@ export const translations: Translations = {
     // Navigation
     'nav.aiAnswers': 'AI-Powered Answers',
     'nav.duaRecommendations': 'Dua Recommendations',
+    'nav.dailyVerse': 'Daily Verse',
     'nav.prayerTimes': 'Prayer Times',
     'nav.hijriCalendar': 'Hijri Calendar',
     'nav.settings': 'Settings',
@@ -65,6 +66,24 @@ export const translations: Translations = {
     'dua.source': 'Source',
     'dua.whenToRecite': 'When to Recite',
     'dua.copyDua': 'Copy Dua',
+    
+    // Daily Verse
+    'dailyVerse.title': 'Daily Verse/Hadith',
+    'dailyVerse.newVerse': 'Show New Verse',
+    'dailyVerse.favorites': 'My Favorites',
+    'dailyVerse.addToFavorites': 'Add to Favorites',
+    'dailyVerse.removeFromFavorites': 'Remove from Favorites',
+    'dailyVerse.addedToFavorites': 'Added to favorites',
+    'dailyVerse.removedFromFavorites': 'Removed from favorites',
+    'dailyVerse.share': 'Share',
+    'dailyVerse.copy': 'Copy',
+    'dailyVerse.quran': 'Quran',
+    'dailyVerse.hadith': 'Hadith',
+    'dailyVerse.all': 'All',
+    'dailyVerse.noFavorites': 'No favorites yet',
+    'dailyVerse.copiedToClipboard': 'Copied to clipboard',
+    'dailyVerse.copiedSuccess': 'Verse copied successfully',
+    'dailyVerse.copyFailed': 'Failed to copy verse',
     
     // Prayer Times
     'prayer.title': 'Prayer Times',
@@ -150,6 +169,7 @@ export const translations: Translations = {
     // Navigation
     'nav.aiAnswers': 'AI Destekli Cevaplar',
     'nav.duaRecommendations': 'Dua Tavsiyeleri',
+    'nav.dailyVerse': 'Günün Ayeti',
     'nav.prayerTimes': 'Namaz Vakitleri',
     'nav.hijriCalendar': 'Hicri Takvim',
     'nav.settings': 'Ayarlar',
@@ -196,6 +216,24 @@ export const translations: Translations = {
     'dua.source': 'Kaynak',
     'dua.whenToRecite': 'Ne Zaman Okunur',
     'dua.copyDua': 'Duayı Kopyala',
+    
+    // Daily Verse
+    'dailyVerse.title': 'Günün Ayeti/Hadisi',
+    'dailyVerse.newVerse': 'Yeni Ayet Göster',
+    'dailyVerse.favorites': 'Favorilerim',
+    'dailyVerse.addToFavorites': 'Favorilere Ekle',
+    'dailyVerse.removeFromFavorites': 'Favorilerden Çıkar',
+    'dailyVerse.addedToFavorites': 'Favorilere eklendi',
+    'dailyVerse.removedFromFavorites': 'Favorilerden çıkarıldı',
+    'dailyVerse.share': 'Paylaş',
+    'dailyVerse.copy': 'Kopyala',
+    'dailyVerse.quran': 'Kuran',
+    'dailyVerse.hadith': 'Hadis',
+    'dailyVerse.all': 'Tümü',
+    'dailyVerse.noFavorites': 'Henüz favori eklemediniz',
+    'dailyVerse.copiedToClipboard': 'Panoya kopyalandı',
+    'dailyVerse.copiedSuccess': 'Ayet başarıyla kopyalandı',
+    'dailyVerse.copyFailed': 'Ayet kopyalanamadı',
     
     // Prayer Times
     'prayer.title': 'Namaz Vakitleri',
@@ -281,6 +319,7 @@ export const translations: Translations = {
     // Navigation
     'nav.aiAnswers': 'إجابات بالذكاء الاصطناعي',
     'nav.duaRecommendations': 'توصيات الأدعية',
+    'nav.dailyVerse': 'آية اليوم',
     'nav.prayerTimes': 'أوقات الصلاة',
     'nav.hijriCalendar': 'التقويم الهجري',
     'nav.settings': 'الإعدادات',
@@ -327,6 +366,24 @@ export const translations: Translations = {
     'dua.source': 'المصدر',
     'dua.whenToRecite': 'متى يُقرأ',
     'dua.copyDua': 'نسخ الدعاء',
+    
+    // Daily Verse
+    'dailyVerse.title': 'آية/حديث اليوم',
+    'dailyVerse.newVerse': 'عرض آية جديدة',
+    'dailyVerse.favorites': 'المفضلة',
+    'dailyVerse.addToFavorites': 'إضافة إلى المفضلة',
+    'dailyVerse.removeFromFavorites': 'إزالة من المفضلة',
+    'dailyVerse.addedToFavorites': 'تمت الإضافة إلى المفضلة',
+    'dailyVerse.removedFromFavorites': 'تمت الإزالة من المفضلة',
+    'dailyVerse.share': 'مشاركة',
+    'dailyVerse.copy': 'نسخ',
+    'dailyVerse.quran': 'القرآن',
+    'dailyVerse.hadith': 'الحديث',
+    'dailyVerse.all': 'الكل',
+    'dailyVerse.noFavorites': 'لا توجد مفضلات بعد',
+    'dailyVerse.copiedToClipboard': 'تم النسخ إلى الحافظة',
+    'dailyVerse.copiedSuccess': 'تم نسخ الآية بنجاح',
+    'dailyVerse.copyFailed': 'فشل نسخ الآية',
     
     // Prayer Times
     'prayer.title': 'أوقات الصلاة',

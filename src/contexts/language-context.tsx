@@ -1,11 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, defaultLanguage } from '@/lib/i18n';
+import { Language, defaultLanguage, getTranslation } from '@/lib/i18n';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -45,8 +46,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return null;
   }
 
+  const t = (key: string) => getTranslation(key, language);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -212,6 +212,34 @@ export const listItemVariants: Variants = {
 // SPECIAL ANIMATIONS
 // ============================================
 
+export const fadeIn: Variants = {
+  initial: {
+    opacity: 0,
+    ...gpuAcceleration,
+  },
+  animate: {
+    opacity: 1,
+    transition: getTransition(0.3),
+  },
+  exit: {
+    opacity: 0,
+    transition: getTransition(0.2),
+  },
+};
+
+export const slideUp: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+    ...gpuAcceleration,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: getTransition(0.3),
+  },
+};
+
 export const fadeInUpVariants: Variants = {
   hidden: {
     opacity: 0,

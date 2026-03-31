@@ -10,8 +10,9 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { NavLink } from '@/components/nav-link';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useLanguage } from '@/contexts/language-context';
+import { FavoritesProvider } from '@/contexts/favorites-context';
 import { getTranslation } from '@/lib/i18n';
-import { MessageCircle, BookHeart, Clock, Calendar } from 'lucide-react';
+import { MessageCircle, BookHeart, BookOpen, Clock, Calendar } from 'lucide-react';
 
 export default function RootLayout({
   children,
@@ -41,7 +42,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const t = (key: string) => getTranslation(key, language);
 
   return (
-    <>
+    <FavoritesProvider>
       <SidebarProvider>
         <Sidebar>
           <SidebarHeader>
@@ -62,6 +63,12 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                 <NavLink href="/dua">
                   <BookHeart />
                   <span>{t('nav.duaRecommendations')}</span>
+                </NavLink>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <NavLink href="/daily-verse">
+                  <BookOpen />
+                  <span>{t('nav.dailyVerse')}</span>
                 </NavLink>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -95,6 +102,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         </SidebarInset>
       </SidebarProvider>
       <Toaster />
-    </>
+    </FavoritesProvider>
   );
 }
