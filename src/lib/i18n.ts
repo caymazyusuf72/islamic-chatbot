@@ -181,6 +181,16 @@ export const translations: Translations = {
     'education.difficulty.medium': 'Medium',
     'education.difficulty.hard': 'Hard',
     
+    // Theme
+    'theme.light': 'Light',
+    'theme.dark': 'Dark',
+    'theme.system': 'System',
+    'theme.accentColor': 'Accent Color',
+    'theme.customize': 'Customize Theme',
+    'theme.pattern': 'Background Pattern',
+    'theme.patternEnabled': 'Pattern Enabled',
+    'theme.patternDisabled': 'Pattern Disabled',
+    
     // Qibla
     'qibla.title': 'Qibla Finder',
     'qibla.description': 'Find the direction to Kaaba from your location',
@@ -396,6 +406,16 @@ export const translations: Translations = {
     'education.difficulty.medium': 'Orta',
     'education.difficulty.hard': 'Zor',
     
+    // Theme
+    'theme.light': 'Açık Tema',
+    'theme.dark': 'Koyu Tema',
+    'theme.system': 'Sistem',
+    'theme.accentColor': 'Vurgu Rengi',
+    'theme.customize': 'Temayı Özelleştir',
+    'theme.pattern': 'Arka Plan Deseni',
+    'theme.patternEnabled': 'Desen Etkin',
+    'theme.patternDisabled': 'Desen Kapalı',
+    
     // Qibla
     'qibla.title': 'Kıble Yönü',
     'qibla.description': 'Konumunuzdan Kabe\'ye olan yönü bulun',
@@ -610,6 +630,16 @@ export const translations: Translations = {
     'education.difficulty.easy': 'سهل',
     'education.difficulty.medium': 'متوسط',
     'education.difficulty.hard': 'صعب',
+    
+    // Theme
+    'theme.light': 'فاتح',
+    'theme.dark': 'داكن',
+    'theme.system': 'النظام',
+    'theme.accentColor': 'لون التمييز',
+    'theme.customize': 'تخصيص المظهر',
+    'theme.pattern': 'نمط الخلفية',
+    'theme.patternEnabled': 'النمط مفعّل',
+    'theme.patternDisabled': 'النمط معطّل',
     
     // Qibla
     'qibla.title': 'محدد القبلة',

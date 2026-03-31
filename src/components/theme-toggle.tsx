@@ -1,39 +1,75 @@
 'use client';
 
-import * as React from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '@/contexts/theme-context';
+import { useLanguage } from '@/contexts/language-context';
+import { getTranslation } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Moon, Sun, Monitor } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function ThemeToggle() {
-  const [theme, setThemeState] = React.useState('light');
+  const { theme, setTheme } = useTheme();
+  const { language } = useLanguage();
+  const t = (key: string) => getTranslation(key, language);
 
-  React.useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setThemeState(isDarkMode ? 'dark' : 'light');
-  }, []);
-  
-  React.useEffect(() => {
-    const isDark =
-      theme === 'dark' ||
-      (theme === 'system' &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches);
-    document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
-  }, [theme]);
+  const cycleTheme = () => {
+    const themes: Array<'light' | 'dark' | 'system'> = ['light', 'dark', 'system'];
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  };
 
-  const toggleTheme = () => {
-    setThemeState(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  const getIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="h-5 w-5" />;
+      case 'dark':
+        return <Moon className="h-5 w-5" />;
+      case 'system':
+        return <Monitor className="h-5 w-5" />;
+    }
+  };
+
+  const getLabel = () => {
+    return t(`theme.${theme}`);
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={toggleTheme}
-      className="w-full justify-start gap-2"
-    >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span>Toggle theme</span>
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={cycleTheme}
+            className="relative"
+            aria-label={getLabel()}
+          >
+            <motion.div
+              key={theme}
+              initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
+              transition={{
+                type: 'spring',
+                stiffness: 300,
+                damping: 20,
+              }}
+            >
+              {getIcon()}
+            </motion.div>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{getLabel()}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
