@@ -133,12 +133,38 @@ export function CalendarSkeleton() {
   );
 }
 
-export function ErrorDisplay({ 
-  message, 
-  onRetry, 
-  retryLabel = 'Try Again' 
-}: { 
-  message: string; 
+export function QiblaMapSkeleton() {
+  return (
+    <div className="w-full h-full bg-muted rounded-lg flex items-center justify-center animate-pulse">
+      <div className="text-center space-y-3">
+        <div className="w-16 h-16 bg-muted-foreground/20 rounded-full mx-auto flex items-center justify-center">
+          <svg
+            className="w-8 h-8 text-muted-foreground/40"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-32 bg-muted-foreground/20 rounded mx-auto"></div>
+          <div className="h-3 w-24 bg-muted-foreground/10 rounded mx-auto"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ErrorDisplay({
+  message,
+  onRetry,
+  retryLabel = 'Try Again'
+}: {
+  message: string;
   onRetry?: () => void;
   retryLabel?: string;
 }) {

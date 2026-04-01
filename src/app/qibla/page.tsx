@@ -17,6 +17,7 @@ import {
   getLocationName,
 } from '@/lib/qibla-calculator';
 import { pageVariants, cardVariants } from '@/lib/animations';
+import { QiblaMapSkeleton } from '@/components/loading-skeletons';
 
 // Lazy load map component to avoid SSR issues
 const QiblaMap = lazy(() => import('@/components/qibla-map').then(mod => ({ default: mod.QiblaMap })));
@@ -224,16 +225,7 @@ export default function QiblaPage() {
                   />
                 ) : (
                   <div className="w-full h-[500px] md:h-[600px]">
-                    <Suspense
-                      fallback={
-                        <div className="w-full h-full bg-muted rounded-lg flex items-center justify-center">
-                          <div className="text-center space-y-2">
-                            <Map className="w-12 h-12 text-muted-foreground mx-auto animate-pulse" />
-                            <div className="text-muted-foreground">{t('common.loading')}</div>
-                          </div>
-                        </div>
-                      }
-                    >
+                    <Suspense fallback={<QiblaMapSkeleton />}>
                       <QiblaMap
                         userLocation={{
                           lat: geolocation.latitude!,
