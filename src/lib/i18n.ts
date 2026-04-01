@@ -227,6 +227,9 @@ export const translations: Translations = {
     'qibla.southeast': 'SE',
     'qibla.southwest': 'SW',
     'qibla.info': 'The Qibla direction is calculated based on your location coordinates. For the most accurate results, ensure your device has a clear view of the sky and is properly calibrated.',
+    'qibla.map': 'Map',
+    'qibla.kaaba': 'Kaaba',
+    'qibla.mecca': 'Mecca, Saudi Arabia',
   },
   
   tr: {
@@ -455,6 +458,9 @@ export const translations: Translations = {
     'qibla.southeast': 'GD',
     'qibla.southwest': 'GB',
     'qibla.info': 'Kıble yönü, konum koordinatlarınıza göre hesaplanır. En doğru sonuçlar için cihazınızın gökyüzüne net bir görüşü olduğundan ve düzgün kalibre edildiğinden emin olun.',
+    'qibla.map': 'Harita',
+    'qibla.kaaba': 'Kabe',
+    'qibla.mecca': 'Mekke, Suudi Arabistan',
   },
   
   ar: {
@@ -683,6 +689,9 @@ export const translations: Translations = {
     'qibla.southeast': 'جر',
     'qibla.southwest': 'جغ',
     'qibla.info': 'يتم حساب اتجاه القبلة بناءً على إحداثيات موقعك. للحصول على أدق النتائج، تأكد من أن جهازك لديه رؤية واضحة للسماء ومعاير بشكل صحيح.',
+    'qibla.map': 'الخريطة',
+    'qibla.kaaba': 'الكعبة',
+    'qibla.mecca': 'مكة المكرمة، المملكة العربية السعودية',
   },
 };
 

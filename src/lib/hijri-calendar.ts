@@ -3,6 +3,7 @@
  * Provides conversion between Gregorian and Hijri dates
  */
 
+// @ts-ignore - hijri-date doesn't have TypeScript definitions
 import HijriDate from 'hijri-date';
 
 export interface HijriDateInterface {

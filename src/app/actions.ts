@@ -30,7 +30,7 @@ export async function answerAction(
   }
 
   // The history is all messages except the last one.
-  const history = messages.slice(0, -1).map(msg => ({
+  const history: Array<{ role: 'user' | 'model'; content: string }> = messages.slice(0, -1).map(msg => ({
     role: msg.role === 'assistant' ? 'model' : 'user',
     content: msg.content
   }));

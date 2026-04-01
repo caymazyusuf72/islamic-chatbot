@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Leaflet CSS */
+@import 'leaflet/dist/leaflet.css';
+
 body {
   font-family: 'PT Sans', sans-serif;
 }
@@ -457,5 +460,50 @@ blockquote.reference-quote {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Leaflet Map Customization */
+.leaflet-container {
+  font-family: 'PT Sans', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.15);
+}
+
+.leaflet-popup-tip {
+  background: hsl(var(--card));
+}
+
+.dark .leaflet-control-zoom a {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .leaflet-control-zoom a:hover {
+  background: hsl(var(--muted));
+}
+
+.dark .leaflet-bar {
+  border-color: hsl(var(--border));
+}
+
+/* Custom Marker Animations */
+.custom-user-marker,
+.custom-kaaba-marker {
+  animation: markerPulse 2s ease-in-out infinite;
+}
+
+@keyframes markerPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
   }
 }

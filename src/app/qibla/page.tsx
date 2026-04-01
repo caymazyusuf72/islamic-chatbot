@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Compass, MapPin, AlertCircle, Info, Smartphone } from 'lucide-react';
+import { Compass, MapPin, AlertCircle, Info, Smartphone, Map } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
 import { QiblaCompass } from '@/components/qibla-compass';
 import { LocationInput } from '@/components/location-input';
 import { useGeolocation } from '@/hooks/use-geolocation';
 import { useDeviceOrientation, getCompassHeading } from '@/hooks/use-device-orientation';
+import { useTheme } from 'next-themes';
 import {
   calculateQiblaDirection,
   calculateDistanceToKaaba,
@@ -17,9 +18,13 @@ import {
 } from '@/lib/qibla-calculator';
 import { pageVariants, cardVariants } from '@/lib/animations';
 
+// Lazy load map component to avoid SSR issues
+const QiblaMap = lazy(() => import('@/components/qibla-map').then(mod => ({ default: mod.QiblaMap })));
+
 export default function QiblaPage() {
   const { language } = useLanguage();
   const t = (key: string) => getTranslation(key, language);
+  const { theme } = useTheme();
 
   const geolocation = useGeolocation();
   const orientation = useDeviceOrientation();
@@ -28,6 +33,7 @@ export default function QiblaPage() {
   const [distance, setDistance] = useState<number | null>(null);
   const [locationName, setLocationName] = useState<string>('');
   const [showLocationInput, setShowLocationInput] = useState(true);
+  const [viewMode, setViewMode] = useState<'compass' | 'map'>('compass');
 
   // Calculate Qibla when location is available
   useEffect(() => {
@@ -144,6 +150,35 @@ export default function QiblaPage() {
               </div>
             </motion.div>
 
+            {/* View Mode Toggle */}
+            <motion.div
+              className="bg-card border border-border rounded-xl p-2 shadow-lg flex gap-2"
+              variants={cardVariants}
+            >
+              <button
+                onClick={() => setViewMode('compass')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
+                  viewMode === 'compass'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                <Compass className="w-5 h-5" />
+                <span className="hidden sm:inline">{t('qibla.compass')}</span>
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
+                  viewMode === 'map'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                <Map className="w-5 h-5" />
+                <span className="hidden sm:inline">{t('qibla.map')}</span>
+              </button>
+            </motion.div>
+
             {/* Qibla Info Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <motion.div
@@ -175,17 +210,42 @@ export default function QiblaPage() {
               </motion.div>
             </div>
 
-            {/* Compass */}
+            {/* Compass or Map View */}
             {qiblaDirection !== null && (
               <motion.div
                 className="bg-card border border-border rounded-xl p-6 shadow-lg"
                 variants={cardVariants}
               >
-                <QiblaCompass
-                  qiblaDirection={qiblaDirection}
-                  deviceHeading={compassHeading}
-                  className="max-w-md mx-auto"
-                />
+                {viewMode === 'compass' ? (
+                  <QiblaCompass
+                    qiblaDirection={qiblaDirection}
+                    deviceHeading={compassHeading}
+                    className="max-w-md mx-auto"
+                  />
+                ) : (
+                  <div className="w-full h-[500px] md:h-[600px]">
+                    <Suspense
+                      fallback={
+                        <div className="w-full h-full bg-muted rounded-lg flex items-center justify-center">
+                          <div className="text-center space-y-2">
+                            <Map className="w-12 h-12 text-muted-foreground mx-auto animate-pulse" />
+                            <div className="text-muted-foreground">{t('common.loading')}</div>
+                          </div>
+                        </div>
+                      }
+                    >
+                      <QiblaMap
+                        userLocation={{
+                          lat: geolocation.latitude!,
+                          lng: geolocation.longitude!,
+                        }}
+                        qiblaDirection={qiblaDirection}
+                        distance={distance!}
+                        isDarkMode={theme === 'dark'}
+                      />
+                    </Suspense>
+                  </div>
+                )}
               </motion.div>
             )}
 
