@@ -32,15 +32,28 @@ Projeyi yerel ortamınızda kurmak ve çalıştırmak için aşağıdaki adımla
     yarn install
     ```
 
-3.  **Gemini API Anahtarını Ayarlayın:**
+3.  **Environment Değişkenlerini Ayarlayın:**
 
-    Projenin kök dizininde (`c:\Users\yusuf\Desktop\studio-master`) `.env` adında yeni bir dosya oluşturun ve içine Gemini API anahtarınızı ekleyin:
+    Projenin kök dizininde `.env.local` dosyası oluşturun (`.env.example` dosyasını kopyalayabilirsiniz):
 
-    ```plaintext
-    GEMINI_API_KEY=BURAYA_KENDİ_GEMINI_API_ANAHTARINIZI_GİRİN
+    ```bash
+    cp .env.example .env.local
     ```
 
-    `BURAYA_KENDİ_GEMINI_API_ANAHTARINIZI_GİRİN` kısmını kendi gerçek Gemini API anahtarınızla değiştirmeyi unutmayın. Anahtarınızı <mcurl name="Google AI Studio" url="https://aistudio.google.com/app/apikey"></mcurl> adresinden alabilirsiniz.
+    Ardından `.env.local` dosyasını açın ve Google Gemini API anahtarınızı ekleyin:
+
+    ```plaintext
+    GOOGLE_API_KEY=your_actual_api_key_here
+    NEXT_PUBLIC_APP_URL=http://localhost:3000
+    ```
+
+    **API Anahtarı Nasıl Alınır:**
+    - <mcurl name="Google AI Studio" url="https://aistudio.google.com/app/apikey"></mcurl> adresine gidin
+    - Google hesabınızla giriş yapın
+    - "Create API Key" butonuna tıklayın
+    - Oluşturulan API anahtarını kopyalayın ve `.env.local` dosyasına yapıştırın
+
+    **Önemli:** `.env.local` dosyası `.gitignore` tarafından otomatik olarak göz ardı edilir, bu nedenle API anahtarınız asla Git'e commit edilmez.
 
 4.  **Uygulamayı Başlatın:**
 
