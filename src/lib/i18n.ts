@@ -86,6 +86,9 @@ export const translations: Translations = {
     'dailyVerse.copiedToClipboard': 'Copied to clipboard',
     'dailyVerse.copiedSuccess': 'Verse copied successfully',
     'dailyVerse.copyFailed': 'Failed to copy verse',
+    'dailyVerse.shareSuccess': 'Share successful',
+    'dailyVerse.copyText': 'Copy Text',
+    'dailyVerse.copied': 'Copied',
     
     // Prayer Times
     'prayer.title': 'Prayer Times',
@@ -311,6 +314,9 @@ export const translations: Translations = {
     'dailyVerse.copiedToClipboard': 'Panoya kopyalandı',
     'dailyVerse.copiedSuccess': 'Ayet başarıyla kopyalandı',
     'dailyVerse.copyFailed': 'Ayet kopyalanamadı',
+    'dailyVerse.shareSuccess': 'Paylaşım başarılı',
+    'dailyVerse.copyText': 'Metni Kopyala',
+    'dailyVerse.copied': 'Kopyalandı',
     
     // Prayer Times
     'prayer.title': 'Namaz Vakitleri',
@@ -536,6 +542,9 @@ export const translations: Translations = {
     'dailyVerse.copiedToClipboard': 'تم النسخ إلى الحافظة',
     'dailyVerse.copiedSuccess': 'تم نسخ الآية بنجاح',
     'dailyVerse.copyFailed': 'فشل نسخ الآية',
+    'dailyVerse.shareSuccess': 'تمت المشاركة بنجاح',
+    'dailyVerse.copyText': 'نسخ النص',
+    'dailyVerse.copied': 'تم النسخ',
     
     // Prayer Times
     'prayer.title': 'أوقات الصلاة',

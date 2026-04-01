@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Share2, Copy } from 'lucide-react';
+import { Heart, Copy } from 'lucide-react';
 import { Verse } from '@/types/verse';
 import { useFavorites } from '@/contexts/favorites-context';
 import { useLanguage } from '@/contexts/language-context';
@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ShareButtons } from '@/components/share-buttons';
 import { fadeIn, slideUp } from '@/lib/animations';
 
 interface VerseCardProps {
@@ -58,22 +59,9 @@ export function VerseCard({ verse }: VerseCardProps) {
     }
   };
 
-  const handleShare = async () => {
-    const text = `${verse.translation[language]}\n\n— ${verse.reference}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: verse.reference,
-          text: text,
-        });
-      } catch (error) {
-        console.error('Failed to share:', error);
-      }
-    } else {
-      // Fallback to copy
-      handleCopy();
-    }
+  // Prepare share text with hashtags
+  const getShareText = () => {
+    return `${verse.arabicText}\n\n${verse.translation[language]}\n\n— ${verse.reference}\n\n#NurAI #İslamiİçerik`;
   };
 
   return (
@@ -115,17 +103,14 @@ export function VerseCard({ verse }: VerseCardProps) {
                 size="icon"
                 onClick={handleCopy}
                 className="h-8 w-8"
+                aria-label={t('dailyVerse.copyText')}
               >
                 <Copy className="h-4 w-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleShare}
-                className="h-8 w-8"
-              >
-                <Share2 className="h-4 w-4" />
-              </Button>
+              <ShareButtons
+                text={getShareText()}
+                title={verse.reference}
+              />
             </div>
           </motion.div>
 
