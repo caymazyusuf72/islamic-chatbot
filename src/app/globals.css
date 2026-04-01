@@ -1,9 +1,9 @@
+/* Leaflet CSS - Must be first */
+@import 'leaflet/dist/leaflet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Leaflet CSS */
-@import 'leaflet/dist/leaflet.css';
 
 body {
   font-family: 'PT Sans', sans-serif;

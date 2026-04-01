@@ -1,4 +1,4 @@
-export type QuizCategory = 'prophets' | 'pillars' | 'quran' | 'history' | 'general';
+export type QuizCategory = 'prophets' | 'pillars' | 'quran' | 'history' | 'general' | 'ethics' | 'hajj';
 export type QuizDifficulty = 'easy' | 'medium' | 'hard';
 
 export interface QuizQuestion {
@@ -26,6 +26,27 @@ export interface QuizResult {
   wrongAnswers: number[];
   timeSpent: number;
   date: number;
+  points: number;
+  combo: number;
+  achievements: string[];
+}
+
+export interface Achievement {
+  id: string;
+  name: {
+    tr: string;
+    en: string;
+    ar: string;
+  };
+  description: {
+    tr: string;
+    en: string;
+    ar: string;
+  };
+  icon: string;
+  condition: (stats: QuizProgress) => boolean;
+  unlocked: boolean;
+  unlockedAt?: number;
 }
 
 export interface QuizProgress {
@@ -35,4 +56,8 @@ export interface QuizProgress {
   totalWrong: number;
   bestScores: Record<QuizCategory, number>;
   recentResults: QuizResult[];
+  totalPoints: number;
+  achievements: Achievement[];
+  streak: number;
+  lastPlayedDate?: number;
 }

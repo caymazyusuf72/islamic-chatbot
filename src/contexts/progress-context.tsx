@@ -26,7 +26,9 @@ const initialQuizProgress: QuizProgress = {
     pillars: 0,
     quran: 0,
     history: 0,
-    general: 0
+    general: 0,
+    ethics: 0,
+    hajj: 0
   },
   totalQuizzes: 0,
   totalCorrect: 0,
@@ -36,9 +38,15 @@ const initialQuizProgress: QuizProgress = {
     pillars: 0,
     quran: 0,
     history: 0,
-    general: 0
+    general: 0,
+    ethics: 0,
+    hajj: 0
   },
-  recentResults: []
+  recentResults: [],
+  totalPoints: 0,
+  achievements: [],
+  streak: 0,
+  lastPlayedDate: undefined
 };
 
 const initialWordMatchProgress: WordMatchProgress = {
@@ -110,6 +118,35 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       newProgress.totalQuizzes += 1;
       newProgress.totalCorrect += result.correctAnswers.length;
       newProgress.totalWrong += result.wrongAnswers.length;
+      
+      // Calculate points (10 points per correct answer, bonus for perfect score)
+      const points = result.correctAnswers.length * 10;
+      const perfectBonus = result.score === 100 ? 50 : 0;
+      const speedBonus = result.timeSpent < 30 ? 25 : 0;
+      newProgress.totalPoints += points + perfectBonus + speedBonus;
+      
+      // Update streak
+      const today = new Date().toDateString();
+      const lastPlayed = newProgress.lastPlayedDate ? new Date(newProgress.lastPlayedDate).toDateString() : null;
+      
+      if (lastPlayed === today) {
+        // Same day, don't update streak
+      } else if (lastPlayed) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (yesterday.toDateString() === lastPlayed) {
+          // Consecutive day
+          newProgress.streak += 1;
+        } else {
+          // Streak broken
+          newProgress.streak = 1;
+        }
+      } else {
+        // First time playing
+        newProgress.streak = 1;
+      }
+      
+      newProgress.lastPlayedDate = Date.now();
       
       // Add to recent results (keep last 10)
       newProgress.recentResults = [result, ...prev.recentResults].slice(0, 10);

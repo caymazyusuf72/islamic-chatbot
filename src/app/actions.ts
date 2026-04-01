@@ -51,9 +51,14 @@ export async function answerAction(
       error: null,
     };
   } catch (error) {
-    console.error(error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-    return { response: null, error: `Failed to get an answer. ${errorMessage}` };
+    // Log detailed error for debugging
+    console.error('[answerAction] Error:', error);
+    
+    // Return generic error message (don't expose internal details)
+    return {
+      response: null,
+      error: 'Failed to get an answer. Please try again later.'
+    };
   }
 }
 
@@ -89,8 +94,13 @@ export async function duaAction(
     });
     return { recommendations: result.recommendations, error: null };
   } catch (error) {
-    console.error(error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-    return { recommendations: null, error: `Failed to get recommendations. ${errorMessage}` };
+    // Log detailed error for debugging
+    console.error('[duaAction] Error:', error);
+    
+    // Return generic error message (don't expose internal details)
+    return {
+      recommendations: null,
+      error: 'Failed to get recommendations. Please try again later.'
+    };
   }
 }

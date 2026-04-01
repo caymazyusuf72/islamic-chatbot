@@ -475,5 +475,349 @@ export const quizQuestions: QuizQuestion[] = [
       en: 'The Shahada is the Islamic declaration of faith expressing the core belief.',
       ar: 'الشهادة هي إعلان الإيمان الإسلامي الذي يعبر عن العقيدة الأساسية.'
     }
+  },
+
+  // Ethics and Manners (Ahlak ve Adab) - NEW CATEGORY
+  {
+    id: 'ethics-1',
+    category: 'ethics',
+    difficulty: 'easy',
+    question: {
+      tr: 'İslam\'da en güzel ahlak örneği kimdir?',
+      en: 'Who is the best example of good character in Islam?',
+      ar: 'من هو أفضل مثال للأخلاق الحسنة في الإسلام؟'
+    },
+    options: ['Hz. Muhammed (SAV)', 'Hz. Ebu Bekir', 'Hz. Ömer', 'Hz. Ali'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hz. Muhammed (SAV) en güzel ahlak örneğidir ve Kuran\'da "üstün bir ahlak üzeresin" diye övülmüştür.',
+      en: 'Prophet Muhammad (PBUH) is the best example of good character and is praised in the Quran.',
+      ar: 'النبي محمد (صلى الله عليه وسلم) هو أفضل مثال للأخلاق الحسنة.'
+    }
+  },
+  {
+    id: 'ethics-2',
+    category: 'ethics',
+    difficulty: 'easy',
+    question: {
+      tr: 'Anne babaya nasıl davranılmalıdır?',
+      en: 'How should we treat our parents?',
+      ar: 'كيف يجب أن نعامل والدينا؟'
+    },
+    options: ['Saygı ve iyilikle', 'Sadece itaat ederek', 'Uzak durarak', 'Bazen ziyaret ederek'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'İslam\'da anne babaya saygı ve iyilik göstermek, Allah\'a ibadetten sonra en önemli görevdir.',
+      en: 'In Islam, showing respect and kindness to parents is the most important duty after worship to Allah.',
+      ar: 'في الإسلام، إظهار الاحترام واللطف للوالدين هو أهم واجب بعد عبادة الله.'
+    }
+  },
+  {
+    id: 'ethics-3',
+    category: 'ethics',
+    difficulty: 'medium',
+    question: {
+      tr: 'Komşu hakları İslam\'da ne kadar önemlidir?',
+      en: 'How important are the rights of neighbors in Islam?',
+      ar: 'ما مدى أهمية حقوق الجيران في الإسلام؟'
+    },
+    options: ['Çok önemlidir', 'Önemli değildir', 'Sadece Müslüman komşular için', 'İsteğe bağlıdır'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hz. Muhammed (SAV) komşu haklarının önemini vurgulamıştır.',
+      en: 'Prophet Muhammad (PBUH) emphasized the importance of neighbors\' rights.',
+      ar: 'أكد النبي محمد (صلى الله عليه وسلم) على أهمية حقوق الجيران.'
+    }
+  },
+  {
+    id: 'ethics-4',
+    category: 'ethics',
+    difficulty: 'medium',
+    question: {
+      tr: 'Yalan söylemek İslam\'da nasıl değerlendirilir?',
+      en: 'How is lying viewed in Islam?',
+      ar: 'كيف يُنظر إلى الكذب في الإسلام؟'
+    },
+    options: ['Büyük günahtır', 'Küçük günahtır', 'Bazen caizdir', 'Günah değildir'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Yalan söylemek İslam\'da büyük günahlardan biridir.',
+      en: 'Lying is one of the major sins in Islam.',
+      ar: 'الكذب من الكبائر في الإسلام.'
+    }
+  },
+  {
+    id: 'ethics-5',
+    category: 'ethics',
+    difficulty: 'hard',
+    question: {
+      tr: 'Gıybet (dedikodu) nedir?',
+      en: 'What is backbiting (gheebah)?',
+      ar: 'ما هي الغيبة؟'
+    },
+    options: ['Arkasından kötü konuşmak', 'Yüzüne karşı eleştirmek', 'İftira atmak', 'Yalan söylemek'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Gıybet, bir kimsenin yokken onun hoşlanmayacağı doğru şeyleri söylemektir ve haramdır.',
+      en: 'Backbiting is mentioning something about a person in their absence that they would dislike.',
+      ar: 'الغيبة هي ذكر شيء عن شخص في غيابه مما يكرهه.'
+    }
+  },
+  {
+    id: 'ethics-6',
+    category: 'ethics',
+    difficulty: 'easy',
+    question: {
+      tr: 'Sadaka vermek hangi ahlaki değeri gösterir?',
+      en: 'What moral value does giving charity demonstrate?',
+      ar: 'ما القيمة الأخلاقية التي تظهرها الصدقة؟'
+    },
+    options: ['Cömertlik', 'Kibir', 'Gösteriş', 'Bencillik'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Sadaka vermek cömertliği, paylaşmayı ve başkalarını düşünmeyi gösterir.',
+      en: 'Giving charity demonstrates generosity, sharing, and caring for others.',
+      ar: 'إعطاء الصدقة يُظهر الكرم والمشاركة والاهتمام بالآخرين.'
+    }
+  },
+  {
+    id: 'ethics-7',
+    category: 'ethics',
+    difficulty: 'medium',
+    question: {
+      tr: 'Sabır İslam\'da nasıl bir erdemdir?',
+      en: 'What kind of virtue is patience in Islam?',
+      ar: 'ما نوع الفضيلة التي يمثلها الصبر في الإسلام؟'
+    },
+    options: ['En yüce erdemlerden', 'Zayıflık işaretidir', 'Önemsizdir', 'Sadece peygamberlere mahsustur'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Sabır İslam\'da en yüce erdemlerden biridir ve Kuran\'da defalarca övülmüştür.',
+      en: 'Patience is one of the highest virtues in Islam and is praised repeatedly in the Quran.',
+      ar: 'الصبر من أعلى الفضائل في الإسلام.'
+    }
+  },
+  {
+    id: 'ethics-8',
+    category: 'ethics',
+    difficulty: 'hard',
+    question: {
+      tr: 'Tevazu (alçak gönüllülük) neden önemlidir?',
+      en: 'Why is humility important?',
+      ar: 'لماذا التواضع مهم؟'
+    },
+    options: ['Kibri önler ve Allah\'a yaklaştırır', 'Zayıf görünmemizi sağlar', 'Başkaları bizi sever', 'Toplumda kabul görürüz'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Tevazu kibri önler, insanı Allah\'a yaklaştırır ve İslam\'ın temel ahlaki değerlerindendir.',
+      en: 'Humility prevents arrogance, brings one closer to Allah.',
+      ar: 'التواضع يمنع الكبر، ويقرب الإنسان من الله.'
+    }
+  },
+  {
+    id: 'ethics-9',
+    category: 'ethics',
+    difficulty: 'medium',
+    question: {
+      tr: 'Emanete hıyanet etmek nasıl bir günahtır?',
+      en: 'What kind of sin is betraying trust?',
+      ar: 'ما نوع الخطيئة التي تمثلها خيانة الأمانة؟'
+    },
+    options: ['Büyük günahtır', 'Küçük günahtır', 'Günah değildir', 'Bazen caizdir'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Emanete hıyanet büyük günahlardan biridir.',
+      en: 'Betraying trust is a major sin.',
+      ar: 'خيانة الأمانة من الكبائر.'
+    }
+  },
+  {
+    id: 'ethics-10',
+    category: 'ethics',
+    difficulty: 'easy',
+    question: {
+      tr: 'Gülümsemek İslam\'da nasıl değerlendirilir?',
+      en: 'How is smiling viewed in Islam?',
+      ar: 'كيف يُنظر إلى الابتسامة في الإسلام؟'
+    },
+    options: ['Sadaka sayılır', 'Önemsizdir', 'Gereksizdir', 'Zaman kaybıdır'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hz. Muhammed (SAV) "Kardeşinin yüzüne gülümsemen sadakadır" buyurmuştur.',
+      en: 'Prophet Muhammad (PBUH) said: "Your smile for your brother is a charity".',
+      ar: 'قال النبي محمد: "تبسمك في وجه أخيك صدقة".'
+    }
+  },
+
+  // Hajj and Umrah (Hac ve Umre) - NEW CATEGORY
+  {
+    id: 'hajj-1',
+    category: 'hajj',
+    difficulty: 'easy',
+    question: {
+      tr: 'Hac ibadeti İslam\'ın kaçıncı şartıdır?',
+      en: 'Which pillar of Islam is Hajj?',
+      ar: 'أي ركن من أركان الإسلام هو الحج؟'
+    },
+    options: ['5. Şart', '4. Şart', '3. Şart', '2. Şart'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hac, İslam\'ın 5. şartıdır ve gücü yeten her Müslüman\'a ömründe bir kez farzdır.',
+      en: 'Hajj is the 5th pillar of Islam and is obligatory once in a lifetime.',
+      ar: 'الحج هو الركن الخامس من أركان الإسلام.'
+    }
+  },
+  {
+    id: 'hajj-2',
+    category: 'hajj',
+    difficulty: 'easy',
+    question: {
+      tr: 'Hac hangi şehirde yapılır?',
+      en: 'In which city is Hajj performed?',
+      ar: 'في أي مدينة يُؤدى الحج؟'
+    },
+    options: ['Mekke', 'Medine', 'Kudüs', 'Cidde'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hac ibadeti Mekke\'de ve çevresindeki kutsal yerlerde yapılır.',
+      en: 'Hajj is performed in Mecca and the surrounding holy sites.',
+      ar: 'يُؤدى الحج في مكة والمواقع المقدسة المحيطة بها.'
+    }
+  },
+  {
+    id: 'hajj-3',
+    category: 'hajj',
+    difficulty: 'medium',
+    question: {
+      tr: 'Arafat vakfesi hangi günde yapılır?',
+      en: 'On which day is the standing at Arafat performed?',
+      ar: 'في أي يوم يتم الوقوف بعرفة؟'
+    },
+    options: ['Zilhicce 9', 'Zilhicce 10', 'Zilhicce 8', 'Zilhicce 11'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Arafat vakfesi, Haccın en önemli rüknü olup Zilhicce ayının 9. günü yapılır.',
+      en: 'The standing at Arafat is the most important pillar of Hajj.',
+      ar: 'الوقوف بعرفة هو أهم ركن من أركان الحج.'
+    }
+  },
+  {
+    id: 'hajj-4',
+    category: 'hajj',
+    difficulty: 'medium',
+    question: {
+      tr: 'İhram nedir?',
+      en: 'What is Ihram?',
+      ar: 'ما هو الإحرام؟'
+    },
+    options: ['Hac için giyilen özel kıyafet ve niyetlenme hali', 'Sadece beyaz elbise', 'Hac duası', 'Kabe\'yi tavaf etmek'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'İhram, Hac veya Umre için niyetlenme hali ve giyilen özel kıyafettir.',
+      en: 'Ihram is the state of consecration and special clothing worn for Hajj or Umrah.',
+      ar: 'الإحرام هو حالة التقديس والملابس الخاصة.'
+    }
+  },
+  {
+    id: 'hajj-5',
+    category: 'hajj',
+    difficulty: 'hard',
+    question: {
+      tr: 'Tavaf kaç kere yapılır?',
+      en: 'How many times is Tawaf performed?',
+      ar: 'كم مرة يتم الطواف؟'
+    },
+    options: ['7 kere', '5 kere', '3 kere', '10 kere'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Tavaf, Kabe\'nin etrafında 7 kere dönmektir.',
+      en: 'Tawaf is circling the Kaaba 7 times.',
+      ar: 'الطواف هو الدوران حول الكعبة 7 مرات.'
+    }
+  },
+  {
+    id: 'hajj-6',
+    category: 'hajj',
+    difficulty: 'medium',
+    question: {
+      tr: 'Safa ve Merve arasında kaç kere gidilir?',
+      en: 'How many times is the walk between Safa and Marwa performed?',
+      ar: 'كم مرة يتم السعي بين الصفا والمروة؟'
+    },
+    options: ['7 kere', '5 kere', '3 kere', '9 kere'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Safa ile Merve arasında 7 kere gidip gelinir, buna Sa\'y denir.',
+      en: 'The walk between Safa and Marwa is performed 7 times, called Sa\'y.',
+      ar: 'السعي بين الصفا والمروة يتم 7 مرات.'
+    }
+  },
+  {
+    id: 'hajj-7',
+    category: 'hajj',
+    difficulty: 'hard',
+    question: {
+      tr: 'Şeytan taşlama (Cemre) hangi günlerde yapılır?',
+      en: 'On which days is the stoning of the devil (Jamarat) performed?',
+      ar: 'في أي أيام يتم رمي الجمرات؟'
+    },
+    options: ['Zilhicce 10, 11, 12, 13', 'Sadece Zilhicce 10', 'Zilhicce 9 ve 10', 'Zilhicce 8, 9, 10'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Cemre atma, Kurban Bayramı günü başlar ve teşrik günlerinde devam eder.',
+      en: 'The stoning begins on Eid day and continues during the days of Tashreeq.',
+      ar: 'يبدأ رمي الجمرات في يوم العيد.'
+    }
+  },
+  {
+    id: 'hajj-8',
+    category: 'hajj',
+    difficulty: 'easy',
+    question: {
+      tr: 'Umre hangi zaman yapılabilir?',
+      en: 'When can Umrah be performed?',
+      ar: 'متى يمكن أداء العمرة؟'
+    },
+    options: ['Yılın her zamanı', 'Sadece Ramazan\'da', 'Sadece Zilhicce\'de', 'Sadece kışın'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Umre, yılın her zamanında yapılabilir, ancak Ramazan\'da sevabı daha fazladır.',
+      en: 'Umrah can be performed at any time of the year.',
+      ar: 'يمكن أداء العمرة في أي وقت من السنة.'
+    }
+  },
+  {
+    id: 'hajj-9',
+    category: 'hajj',
+    difficulty: 'medium',
+    question: {
+      tr: 'Mina\'da kaç gece geçirilir?',
+      en: 'How many nights are spent in Mina?',
+      ar: 'كم ليلة تُقضى في منى؟'
+    },
+    options: ['2-3 gece', '1 gece', '4 gece', '5 gece'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Hacılar Mina\'da teşrik günlerinde 2 veya 3 gece geçirirler.',
+      en: 'Pilgrims spend 2 or 3 nights in Mina during the days of Tashreeq.',
+      ar: 'يقضي الحجاج ليلتين أو ثلاث ليالٍ في منى.'
+    }
+  },
+  {
+    id: 'hajj-10',
+    category: 'hajj',
+    difficulty: 'hard',
+    question: {
+      tr: 'Veda tavafı ne zaman yapılır?',
+      en: 'When is the Farewell Tawaf performed?',
+      ar: 'متى يتم طواف الوداع؟'
+    },
+    options: ['Mekke\'den ayrılmadan önce', 'Haccın başında', 'Arafat\'tan sonra', 'Mina\'da'],
+    correctAnswer: 0,
+    explanation: {
+      tr: 'Veda tavafı, Hac ibadetinin son rüknü olup Mekke\'den ayrılmadan önce yapılır.',
+      en: 'The Farewell Tawaf is the last pillar of Hajj.',
+      ar: 'طواف الوداع هو آخر ركن من أركان الحج.'
+    }
   }
 ];
