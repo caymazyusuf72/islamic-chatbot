@@ -1,7 +1,8 @@
 'use client';
 
 import './globals.css';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { AppWrapper } from '@/components/app-wrapper';
@@ -17,6 +18,7 @@ import { ThemeProvider } from '@/contexts/theme-context';
 import { FavoritesProvider } from '@/contexts/favorites-context';
 import { IslamicPatternBackground } from '@/components/islamic-pattern-background';
 import { PageTransition } from '@/components/page-transition';
+import { PageLoading } from '@/components/page-loading';
 import { getTranslation } from '@/lib/i18n';
 import { reportWebVitals } from '@/lib/performance';
 import { MessageCircle, BookHeart, BookOpen, Clock, Calendar, Compass, GraduationCap } from 'lucide-react';
@@ -74,6 +76,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <FavoritesProvider>
+      <PageLoadingWrapper />
       <SkipLink />
       <SidebarProvider>
         <Sidebar role="navigation" aria-label={t('accessibility.mainNavigation') || 'Main navigation'}>
@@ -151,4 +154,93 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <Toaster />
     </FavoritesProvider>
   );
+}
+
+function PageLoadingWrapper() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const pathname = usePathname();
+  const previousPathname = useRef(pathname);
+  const progressInterval = useRef<NodeJS.Timeout | null>(null);
+  const loadingTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const cleanup = () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+        progressInterval.current = null;
+      }
+      if (loadingTimeout.current) {
+        clearTimeout(loadingTimeout.current);
+        loadingTimeout.current = null;
+      }
+    };
+
+    if (pathname !== previousPathname.current) {
+      cleanup();
+      
+      setIsLoading(true);
+      setProgress(0);
+
+      let currentProgress = 0;
+      const startTime = Date.now();
+      const minDuration = 500;
+      const maxDuration = 2000;
+      
+      const progressSteps = [
+        { until: 30, speed: 50 },
+        { until: 60, speed: 100 },
+        { until: 90, speed: 150 },
+        { until: 95, speed: 300 },
+      ];
+
+      progressInterval.current = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        
+        let speed = 300;
+        for (const step of progressSteps) {
+          if (currentProgress < step.until) {
+            speed = step.speed;
+            break;
+          }
+        }
+
+        if (currentProgress < 95) {
+          const increment = Math.random() * 3 + 1;
+          currentProgress = Math.min(currentProgress + increment, 95);
+          setProgress(Math.floor(currentProgress));
+        }
+
+        if (elapsed >= minDuration && currentProgress >= 90) {
+          currentProgress = 100;
+          setProgress(100);
+          
+          loadingTimeout.current = setTimeout(() => {
+            setIsLoading(false);
+            setProgress(0);
+          }, 300);
+          
+          cleanup();
+        }
+
+        if (elapsed >= maxDuration) {
+          currentProgress = 100;
+          setProgress(100);
+          
+          loadingTimeout.current = setTimeout(() => {
+            setIsLoading(false);
+            setProgress(0);
+          }, 300);
+          
+          cleanup();
+        }
+      }, 50);
+
+      previousPathname.current = pathname;
+    }
+
+    return cleanup;
+  }, [pathname]);
+
+  return <PageLoading isLoading={isLoading} progress={progress} />;
 }
