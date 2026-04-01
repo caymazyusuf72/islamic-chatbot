@@ -38,6 +38,13 @@ export const translations: Translations = {
     'nav.settings': 'Settings',
     'nav.language': 'Language',
     
+    // Accessibility
+    'accessibility.skipToMain': 'Skip to main content',
+    'accessibility.mainNavigation': 'Main navigation',
+    'accessibility.mainContent': 'Main content',
+    'accessibility.closeMenu': 'Close menu',
+    'accessibility.openMenu': 'Open menu',
+    
     // Chat
     'chat.greeting': 'Assalamu alaikum!',
     'chat.howCanIHelp': 'How can I help you today?',
@@ -257,6 +264,13 @@ export const translations: Translations = {
     'nav.education': 'Eğitim',
     'nav.settings': 'Ayarlar',
     'nav.language': 'Dil',
+    
+    // Accessibility
+    'accessibility.skipToMain': 'Ana içeriğe atla',
+    'accessibility.mainNavigation': 'Ana navigasyon',
+    'accessibility.mainContent': 'Ana içerik',
+    'accessibility.closeMenu': 'Menüyü kapat',
+    'accessibility.openMenu': 'Menüyü aç',
     
     // Chat
     'chat.greeting': 'Esselamu Aleyküm!',
@@ -488,6 +502,13 @@ export const translations: Translations = {
     'nav.education': 'التعليم',
     'nav.settings': 'الإعدادات',
     'nav.language': 'اللغة',
+    
+    // Accessibility
+    'accessibility.skipToMain': 'انتقل إلى المحتوى الرئيسي',
+    'accessibility.mainNavigation': 'التنقل الرئيسي',
+    'accessibility.mainContent': 'المحتوى الرئيسي',
+    'accessibility.closeMenu': 'إغلاق القائمة',
+    'accessibility.openMenu': 'فتح القائمة',
     
     // Chat
     'chat.greeting': 'السلام عليكم!',
