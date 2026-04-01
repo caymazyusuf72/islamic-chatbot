@@ -31,20 +31,34 @@ const nextConfig: NextConfig = {
   },
   // Suppress warnings for optional dependencies
   webpack: (config, { isServer }) => {
+    // Ignore optional OpenTelemetry and Firebase dependencies
+    config.externals = config.externals || [];
     if (isServer) {
-      // Ignore optional OpenTelemetry and Firebase dependencies
-      config.externals = config.externals || [];
       config.externals.push({
         '@opentelemetry/exporter-jaeger': 'commonjs @opentelemetry/exporter-jaeger',
         '@genkit-ai/firebase': 'commonjs @genkit-ai/firebase',
       });
     }
     
-    // Suppress specific warnings
+    // Aggressively suppress all warnings
     config.ignoreWarnings = [
+      // Module not found warnings
       { module: /node_modules\/@opentelemetry/ },
+      { module: /node_modules\/@genkit-ai/ },
       { module: /node_modules\/handlebars/ },
+      // Specific warning patterns
+      /Can't resolve '@opentelemetry\/exporter-jaeger'/,
+      /Can't resolve '@genkit-ai\/firebase'/,
+      /require\.extensions/,
+      /Critical dependency/,
+      // Catch-all for any remaining warnings
+      () => true,
     ];
+    
+    // Disable performance hints
+    config.performance = {
+      hints: false,
+    };
     
     return config;
   },
