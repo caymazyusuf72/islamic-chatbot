@@ -111,7 +111,10 @@ export function useQuiz(options: UseQuizOptions = {}) {
       correctAnswers,
       wrongAnswers,
       timeSpent: Math.floor((Date.now() - startTime) / 1000),
-      date: Date.now()
+      date: Date.now(),
+      points: calculateScore(),
+      combo: correctAnswers.length,
+      achievements: []
     };
   }, [calculateScore, questions.length, correctAnswers, wrongAnswers, startTime]);
 
