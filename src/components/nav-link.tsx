@@ -16,7 +16,12 @@ export function NavLink({ href, children }: NavLinkProps) {
 
   return (
     <SidebarMenuButton asChild isActive={isActive}>
-      <Link href={href}>{children}</Link>
+      <Link
+        href={href}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        {children}
+      </Link>
     </SidebarMenuButton>
   );
 }

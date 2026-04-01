@@ -53,15 +53,17 @@ export function LocationInput({
         variants={buttonVariants}
         whileHover="hover"
         whileTap="tap"
+        aria-label={loading ? t('common.loading') : t('qibla.useMyLocation')}
+        aria-busy={loading}
       >
         {loading ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
             <span>{t('common.loading')}</span>
           </>
         ) : (
           <>
-            <MapPin className="w-5 h-5" />
+            <MapPin className="w-5 h-5" aria-hidden="true" />
             <span>{t('qibla.useMyLocation')}</span>
           </>
         )}
@@ -86,7 +88,7 @@ export function LocationInput({
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="latitude" className="block text-sm text-muted-foreground">
+          <label htmlFor="latitude" className="block text-sm font-medium text-muted-foreground">
             {t('qibla.latitude')} (-90 to 90)
           </label>
           <input
@@ -101,11 +103,14 @@ export function LocationInput({
             disabled={disabled || loading}
             className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
             required
+            aria-required="true"
+            aria-invalid={!!error}
+            aria-describedby={error ? 'location-error' : undefined}
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="longitude" className="block text-sm text-muted-foreground">
+          <label htmlFor="longitude" className="block text-sm font-medium text-muted-foreground">
             {t('qibla.longitude')} (-180 to 180)
           </label>
           <input
@@ -120,11 +125,19 @@ export function LocationInput({
             disabled={disabled || loading}
             className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
             required
+            aria-required="true"
+            aria-invalid={!!error}
+            aria-describedby={error ? 'location-error' : undefined}
           />
         </div>
 
         {error && (
-          <div className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
+          <div
+            id="location-error"
+            role="alert"
+            aria-live="polite"
+            className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg"
+          >
             {error}
           </div>
         )}
@@ -136,6 +149,7 @@ export function LocationInput({
           variants={buttonVariants}
           whileHover="hover"
           whileTap="tap"
+          aria-label={t('qibla.calculate')}
         >
           {t('qibla.calculate')}
         </motion.button>
@@ -158,6 +172,7 @@ export function LocationInput({
               onClick={() => onLocationSelect(city.lat, city.lng)}
               disabled={disabled || loading}
               className="px-3 py-2 text-xs bg-muted hover:bg-muted/80 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label={`Select ${city.name} location`}
             >
               {city.name}
             </button>

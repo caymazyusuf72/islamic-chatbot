@@ -11,6 +11,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { ThemePicker } from '@/components/theme-picker';
 import { NavLink } from '@/components/nav-link';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { SkipLink } from '@/components/skip-link';
 import { useLanguage } from '@/contexts/language-context';
 import { ThemeProvider } from '@/contexts/theme-context';
 import { FavoritesProvider } from '@/contexts/favorites-context';
@@ -73,8 +74,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <FavoritesProvider>
+      <SkipLink />
       <SidebarProvider>
-        <Sidebar>
+        <Sidebar role="navigation" aria-label={t('accessibility.mainNavigation') || 'Main navigation'}>
           <SidebarHeader>
             <div className="flex items-center gap-2">
               <Icons.logo className="h-8 w-8 text-primary" />
@@ -139,7 +141,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>
-          <main className="h-full w-full">
+          <main id="main-content" className="h-full w-full" role="main" aria-label={t('accessibility.mainContent') || 'Main content'}>
             <PageTransition>
               {children}
             </PageTransition>

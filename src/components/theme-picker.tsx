@@ -67,24 +67,30 @@ export function ThemePicker() {
                   const Icon = option.icon;
                   return (
                     <motion.button
-                      key={option.value}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setTheme(option.value)}
-                      className={`
-                        relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all
-                        ${
-                          theme === option.value
-                            ? 'border-primary bg-primary/10'
-                            : 'border-border hover:border-primary/50'
-                        }
-                      `}
-                      aria-label={t(`theme.${option.value}`)}
-                    >
-                      <Icon className="h-5 w-5" />
+                        key={option.value}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setTheme(option.value)}
+                        className={`
+                          relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all
+                          ${
+                            theme === option.value
+                              ? 'border-primary bg-primary/10'
+                              : 'border-border hover:border-primary/50'
+                          }
+                        `}
+                        aria-label={`${t(`theme.${option.value}`)} theme`}
+                        aria-pressed={theme === option.value}
+                        role="radio"
+                        aria-checked={theme === option.value}
+                      >
+                      <Icon className="h-5 w-5" aria-hidden="true" />
                       <span className="text-xs font-medium">
                         {t(`theme.${option.value}`)}
                       </span>
+                      {theme === option.value && (
+                        <span className="sr-only"> (selected)</span>
+                      )}
                       {theme === option.value && (
                         <motion.div
                           layoutId="theme-indicator"
@@ -119,7 +125,9 @@ export function ThemePicker() {
                       }
                     `}
                     style={{ backgroundColor: color.color }}
-                    aria-label={color.label}
+                    aria-label={`${color.label} accent color`}
+                    role="radio"
+                    aria-checked={accentColor === color.name}
                   >
                     {accentColor === color.name && (
                       <motion.div
@@ -128,7 +136,8 @@ export function ThemePicker() {
                         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                         className="absolute inset-0 flex items-center justify-center"
                       >
-                        <Check className="h-5 w-5 text-white drop-shadow-lg" />
+                        <Check className="h-5 w-5 text-white drop-shadow-lg" aria-hidden="true" />
+                        <span className="sr-only">Selected</span>
                       </motion.div>
                     )}
                   </motion.button>

@@ -39,21 +39,31 @@ export function LanguageSwitcher({ currentLanguage, onLanguageChange }: Language
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Globe className="w-4 h-4" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2"
+          aria-label={`Current language: ${currentLang?.name}. Click to change language`}
+        >
+          <Globe className="w-4 h-4" aria-hidden="true" />
           <span className="hidden sm:inline">{currentLang?.name}</span>
-          <span className="sm:hidden">{currentLang?.flag}</span>
+          <span className="sm:hidden" aria-label={currentLang?.name}>{currentLang?.flag}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" aria-label="Language options">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}
             className={currentLanguage === lang.code ? 'bg-accent' : ''}
+            role="menuitemradio"
+            aria-checked={currentLanguage === lang.code}
           >
-            <span className="mr-2">{lang.flag}</span>
+            <span className="mr-2" aria-hidden="true">{lang.flag}</span>
             {lang.name}
+            {currentLanguage === lang.code && (
+              <span className="sr-only"> (selected)</span>
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

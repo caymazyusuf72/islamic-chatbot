@@ -51,19 +51,19 @@ export function QuizCard({
       className="w-full max-w-2xl mx-auto"
     >
       {/* Progress Bar */}
-      <div className="mb-6">
+      <div className="mb-6" role="region" aria-label="Quiz progress">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground" aria-label={`Question ${currentIndex + 1} of ${totalQuestions}`}>
             {currentIndex + 1} / {totalQuestions}
           </span>
           {timeElapsed !== undefined && (
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Clock className="w-4 h-4" />
-              <span>{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</span>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground" aria-label={`Time elapsed: ${Math.floor(timeElapsed / 60)} minutes ${timeElapsed % 60} seconds`}>
+              <Clock className="w-4 h-4" aria-hidden="true" />
+              <span aria-hidden="true">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</span>
             </div>
           )}
         </div>
-        <div className="h-2 bg-secondary rounded-full overflow-hidden">
+        <div className="h-2 bg-secondary rounded-full overflow-hidden" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} aria-label="Quiz completion progress">
           <motion.div
             className="h-full bg-gradient-to-r from-primary to-accent"
             initial={{ width: 0 }}
@@ -74,21 +74,21 @@ export function QuizCard({
       </div>
 
       {/* Question Card */}
-      <div className="bg-card border border-border rounded-lg p-6 shadow-lg">
+      <div className="bg-card border border-border rounded-lg p-6 shadow-lg" role="article" aria-labelledby="quiz-question">
         {/* Question */}
         <div className="mb-6">
-          <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm mb-4">
+          <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm mb-4" role="note">
             {question.category.charAt(0).toUpperCase() + question.category.slice(1)}
           </div>
-          <h2 className="text-xl font-semibold mb-2">{questionText}</h2>
+          <h2 id="quiz-question" className="text-xl font-semibold mb-2">{questionText}</h2>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Award className="w-4 h-4" />
+            <Award className="w-4 h-4" aria-hidden="true" />
             <span className="capitalize">{question.difficulty}</span>
           </div>
         </div>
 
         {/* Options */}
-        <div className="space-y-3 mb-6">
+        <div className="space-y-3 mb-6" role="radiogroup" aria-labelledby="quiz-question">
           {question.options.map((option, index) => {
             const isSelected = selectedAnswer === index;
             const isCorrectOption = index === question.correctAnswer;
@@ -115,6 +115,9 @@ export function QuizCard({
                 }`}
                 whileHover={!isAnswered ? { scale: 1.02 } : {}}
                 whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                role="radio"
+                aria-checked={isSelected}
+                aria-label={`Option ${getOptionLabel(index)}: ${option}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -134,10 +137,10 @@ export function QuizCard({
                     <span className="font-medium">{option}</span>
                   </div>
                   {showResult && isCorrectOption && (
-                    <Check className="w-5 h-5 text-green-500" />
+                    <Check className="w-5 h-5 text-green-500" aria-label="Correct answer" />
                   )}
                   {showResult && isSelected && !isCorrect && (
-                    <X className="w-5 h-5 text-red-500" />
+                    <X className="w-5 h-5 text-red-500" aria-label="Incorrect answer" />
                   )}
                 </div>
               </motion.button>
@@ -153,10 +156,12 @@ export function QuizCard({
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               className="mb-6 p-4 bg-secondary/50 rounded-lg border border-border"
+              role="status"
+              aria-live="polite"
             >
               <div className="flex items-start gap-2">
                 <div className={`mt-0.5 ${isCorrect ? 'text-green-500' : 'text-blue-500'}`}>
-                  {isCorrect ? <Check className="w-5 h-5" /> : <Award className="w-5 h-5" />}
+                  {isCorrect ? <Check className="w-5 h-5" aria-hidden="true" /> : <Award className="w-5 h-5" aria-hidden="true" />}
                 </div>
                 <div>
                   <p className="font-semibold mb-1">
@@ -178,6 +183,7 @@ export function QuizCard({
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Submit answer"
             >
               Cevapla
             </motion.button>
@@ -187,6 +193,7 @@ export function QuizCard({
               className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label={currentIndex < totalQuestions - 1 ? 'Next question' : 'Finish quiz'}
             >
               {currentIndex < totalQuestions - 1 ? 'Sonraki' : 'Bitir'}
             </motion.button>

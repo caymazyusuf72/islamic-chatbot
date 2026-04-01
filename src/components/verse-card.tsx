@@ -71,31 +71,35 @@ export function VerseCard({ verse }: VerseCardProps) {
       animate="animate"
       exit="exit"
     >
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden" role="article" aria-labelledby="verse-reference">
         <CardContent className="p-6 space-y-6">
           {/* Type Badge */}
           <motion.div variants={slideUp} className="flex items-center justify-between">
-            <Badge 
+            <Badge
               variant="outline"
-              style={{ 
+              style={{
                 borderColor: accentColor,
-                color: accentColor 
+                color: accentColor
               }}
+              role="note"
             >
               {verse.type === 'quran' ? t('dailyVerse.quran') : t('dailyVerse.hadith')}
             </Badge>
             
             {/* Action Buttons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" role="group" aria-label="Verse actions">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleFavoriteToggle}
                 className="h-8 w-8"
+                aria-label={favorite ? t('dailyVerse.removeFromFavorites') : t('dailyVerse.addToFavorites')}
+                aria-pressed={favorite}
               >
                 <Heart
                   className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`}
                   style={{ color: favorite ? accentColor : undefined }}
+                  aria-hidden="true"
                 />
               </Button>
               <Button
@@ -105,7 +109,7 @@ export function VerseCard({ verse }: VerseCardProps) {
                 className="h-8 w-8"
                 aria-label={t('dailyVerse.copyText')}
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="h-4 w-4" aria-hidden="true" />
               </Button>
               <ShareButtons
                 text={getShareText()}
@@ -115,47 +119,51 @@ export function VerseCard({ verse }: VerseCardProps) {
           </motion.div>
 
           {/* Arabic Text */}
-          <motion.div 
+          <motion.div
             variants={slideUp}
             className="text-center"
           >
-            <p 
+            <p
               className="text-2xl md:text-3xl font-arabic leading-loose"
               dir="rtl"
               lang="ar"
+              role="text"
+              aria-label="Arabic text"
             >
               {verse.arabicText}
             </p>
           </motion.div>
 
           {/* Transliteration */}
-          <motion.div 
+          <motion.div
             variants={slideUp}
             className="text-center"
           >
-            <p className="text-sm md:text-base text-muted-foreground italic">
+            <p className="text-sm md:text-base text-muted-foreground italic" role="text" aria-label="Transliteration">
               {verse.transliteration}
             </p>
           </motion.div>
 
           {/* Translation */}
-          <motion.div 
+          <motion.div
             variants={slideUp}
             className="text-center"
           >
-            <p className="text-base md:text-lg leading-relaxed">
+            <p className="text-base md:text-lg leading-relaxed" role="text" aria-label="Translation">
               {verse.translation[language]}
             </p>
           </motion.div>
 
           {/* Reference */}
-          <motion.div 
+          <motion.div
             variants={slideUp}
             className="text-center pt-4 border-t"
           >
-            <p 
+            <p
+              id="verse-reference"
               className="text-sm font-medium"
               style={{ color: accentColor }}
+              role="text"
             >
               {verse.reference}
             </p>
@@ -163,15 +171,18 @@ export function VerseCard({ verse }: VerseCardProps) {
 
           {/* Tags */}
           {verse.tags.length > 0 && (
-            <motion.div 
+            <motion.div
               variants={slideUp}
               className="flex flex-wrap gap-2 justify-center"
+              role="list"
+              aria-label="Verse tags"
             >
               {verse.tags.map((tag) => (
-                <Badge 
-                  key={tag} 
+                <Badge
+                  key={tag}
                   variant="secondary"
                   className="text-xs"
+                  role="listitem"
                 >
                   {tag}
                 </Badge>
