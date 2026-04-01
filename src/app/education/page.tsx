@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
 import { Brain, Gamepad2, Trophy, BarChart3 } from 'lucide-react';
-import { QuizCard } from '@/components/quiz-card';
-import { WordMatchGrid } from '@/components/word-match-grid';
 import { useQuiz } from '@/hooks/use-quiz';
 import { useWordMatch } from '@/hooks/use-word-match';
 import { useProgress } from '@/contexts/progress-context';
 import { QuizCategory, QuizDifficulty } from '@/types/quiz';
+
+// Lazy load heavy game components
+const QuizCard = lazy(() => import('@/components/quiz-card').then(mod => ({ default: mod.QuizCard })));
+const WordMatchGrid = lazy(() => import('@/components/word-match-grid').then(mod => ({ default: mod.WordMatchGrid })));
 
 type GameMode = 'menu' | 'quiz' | 'wordMatch';
 
@@ -95,17 +97,26 @@ export default function EducationPage() {
 
     return (
       <div className="container mx-auto p-6">
-        <QuizCard
-          question={quiz.currentQuestion}
-          selectedAnswer={quiz.selectedAnswer}
-          isAnswered={quiz.isAnswered}
-          onSelectAnswer={quiz.selectAnswer}
-          onSubmit={quiz.submitAnswer}
-          onNext={quiz.nextQuestion}
-          currentIndex={quiz.currentQuestionIndex}
-          totalQuestions={quiz.totalQuestions}
-          progress={quiz.progress}
-        />
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center space-y-4">
+              <Brain className="w-12 h-12 text-primary mx-auto animate-pulse" />
+              <div className="text-muted-foreground">Quiz yükleniyor...</div>
+            </div>
+          </div>
+        }>
+          <QuizCard
+            question={quiz.currentQuestion}
+            selectedAnswer={quiz.selectedAnswer}
+            isAnswered={quiz.isAnswered}
+            onSelectAnswer={quiz.selectAnswer}
+            onSubmit={quiz.submitAnswer}
+            onNext={quiz.nextQuestion}
+            currentIndex={quiz.currentQuestionIndex}
+            totalQuestions={quiz.totalQuestions}
+            progress={quiz.progress}
+          />
+        </Suspense>
       </div>
     );
   }
@@ -113,20 +124,29 @@ export default function EducationPage() {
   if (gameMode === 'wordMatch') {
     return (
       <div className="container mx-auto p-6">
-        <WordMatchGrid
-          cards={wordMatch.cards}
-          selectedCards={wordMatch.selectedCards}
-          moves={wordMatch.moves}
-          isFinished={wordMatch.isFinished}
-          progress={wordMatch.progress}
-          onCardClick={wordMatch.flipCard}
-          onRestart={() => {
-            wordMatch.restartGame();
-            if (wordMatch.isFinished) {
-              handleWordMatchFinish();
-            }
-          }}
-        />
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center space-y-4">
+              <Gamepad2 className="w-12 h-12 text-green-500 mx-auto animate-pulse" />
+              <div className="text-muted-foreground">Kelime oyunu yükleniyor...</div>
+            </div>
+          </div>
+        }>
+          <WordMatchGrid
+            cards={wordMatch.cards}
+            selectedCards={wordMatch.selectedCards}
+            moves={wordMatch.moves}
+            isFinished={wordMatch.isFinished}
+            progress={wordMatch.progress}
+            onCardClick={wordMatch.flipCard}
+            onRestart={() => {
+              wordMatch.restartGame();
+              if (wordMatch.isFinished) {
+                handleWordMatchFinish();
+              }
+            }}
+          />
+        </Suspense>
         {wordMatch.isFinished && (
           <div className="mt-6 text-center">
             <motion.button

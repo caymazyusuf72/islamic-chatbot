@@ -1,6 +1,7 @@
 'use client';
 
 import './globals.css';
+import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarFooter } from '@/components/ui/sidebar';
 import { AppWrapper } from '@/components/app-wrapper';
@@ -16,6 +17,7 @@ import { FavoritesProvider } from '@/contexts/favorites-context';
 import { IslamicPatternBackground } from '@/components/islamic-pattern-background';
 import { PageTransition } from '@/components/page-transition';
 import { getTranslation } from '@/lib/i18n';
+import { reportWebVitals } from '@/lib/performance';
 import { MessageCircle, BookHeart, BookOpen, Clock, Calendar, Compass, GraduationCap } from 'lucide-react';
 
 export default function RootLayout({
@@ -23,6 +25,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Track Web Vitals
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Dynamic import of web-vitals to avoid SSR issues
+      import('web-vitals').then(({ onCLS, onFID, onLCP, onFCP, onTTFB, onINP }) => {
+        onCLS(reportWebVitals);
+        onFID(reportWebVitals);
+        onLCP(reportWebVitals);
+        onFCP(reportWebVitals);
+        onTTFB(reportWebVitals);
+        onINP(reportWebVitals);
+      }).catch(() => {
+        // Silently fail if web-vitals is not available
+      });
+    }
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
