@@ -5,12 +5,11 @@ import { answerAction } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Volume2, StopCircle, Copy, Trash2, Download, RotateCw, BookOpen, Baby } from 'lucide-react';
+import { Send, LoaderCircle, Sparkles, CornerDownLeft, Bot, User, Copy, Trash2, Download, RotateCw, BookOpen, Baby } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/language-context';
 import { getTranslation } from '@/lib/i18n';
@@ -26,65 +25,6 @@ type Message = {
 
 const STORAGE_KEY = 'nurai-chat-history';
 const KIDS_MODE_KEY = 'nurai-kids-mode';
-
-function TTSButton({ text }: { text: string }) {
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handlePlayback = async () => {
-    if (audio && isPlaying) {
-      audio.pause();
-      audio.currentTime = 0;
-      setIsPlaying(false);
-      return;
-    }
-
-    if (audio) {
-      audio.play();
-      setIsPlaying(true);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await textToSpeech({ text });
-      if (response.audioDataUri) {
-        const newAudio = new Audio(response.audioDataUri);
-        newAudio.addEventListener('ended', () => {
-          setIsPlaying(false);
-        });
-        setAudio(newAudio);
-        newAudio.play();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.error('TTS Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <Button
-      size="icon"
-      variant="ghost"
-      onClick={handlePlayback}
-      disabled={isLoading}
-      className="h-7 w-7 text-muted-foreground focus-ring"
-      aria-label={isPlaying ? 'Stop reading' : 'Read aloud'}
-    >
-      {isLoading ? (
-        <LoaderCircle className="animate-spin" aria-hidden="true" />
-      ) : isPlaying ? (
-        <StopCircle aria-hidden="true" />
-      ) : (
-        <Volume2 aria-hidden="true" />
-      )}
-      <span className="sr-only">{isPlaying ? 'Stop reading' : 'Read aloud'}</span>
-    </Button>
-  );
-}
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -413,7 +353,6 @@ export default function Home() {
                     <p className="whitespace-pre-wrap text-sm sm:text-base break-words">{msg.content}</p>
                   </div>
                   <div className="flex flex-col gap-1 flex-shrink-0 ml-2">
-                    {msg.role === 'assistant' && <TTSButton text={msg.content} />}
                     <Button
                       size="icon"
                       variant="ghost"

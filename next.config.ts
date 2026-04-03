@@ -36,7 +36,10 @@ const nextConfig: NextConfig = {
     if (isServer) {
       config.externals.push({
         '@opentelemetry/exporter-jaeger': 'commonjs @opentelemetry/exporter-jaeger',
+        '@opentelemetry/exporter-zipkin': 'commonjs @opentelemetry/exporter-zipkin',
+        '@opentelemetry/exporter-prometheus': 'commonjs @opentelemetry/exporter-prometheus',
         '@genkit-ai/firebase': 'commonjs @genkit-ai/firebase',
+        'handlebars': 'commonjs handlebars',
       });
     }
     

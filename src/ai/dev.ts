@@ -3,4 +3,3 @@ config();
 
 import '@/ai/flows/generate-dua-recommendations.ts';
 import '@/ai/flows/answer-islamic-questions.ts';
-import '@/ai/flows/text-to-speech.ts';
