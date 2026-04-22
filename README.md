@@ -4,7 +4,7 @@ Bu proje, İslami konularda sohbet edebileceğiniz bir chatbot uygulamasıdır. 
 
 ## Proje Hakkında
 
-Bu proje, <mcurl name="Google Gemini API" url="https://ai.google.dev/gemini"></mcurl> kullanılarak oluşturulmuştur. Temel amacı, kullanıcılara İslami sohbet asistanı olarak hizmet vermektir.
+Bu proje, [Google Gemini API](https://ai.google.dev/gemini) kullanılarak oluşturulmuştur. Temel amacı, kullanıcılara İslami sohbet asistanı olarak hizmet vermektir.
 
 ### Kullanılan Teknolojiler
 
